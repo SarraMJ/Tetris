@@ -5,6 +5,10 @@ public class Piece implements Runnable {
 
     private int x = 5;
     private int y = 5;
+
+    //coordonnees de la case la plus basse qui est true
+    private int basX;
+    private int basY;
     private int dY = 1;
 
     private boolean[][] tabPiece;
@@ -26,6 +30,9 @@ public class Piece implements Runnable {
         grille = _grille;
         tabPiece= new boolean[4][4];
         randPiece();
+        plusbasY();
+        System.out.print("basX "+basX);
+        System.out.print("basY "+basY);
     }
 
 
@@ -49,15 +56,40 @@ public class Piece implements Runnable {
         }else dY=1;
     }
 
-    public void run() {
+    public void plusbasY(){ //les coordonnees de la case la plus basse de la piece qui est true
+        basY=y;
+        basX=x;
+        for (int i=0;i<4;i++) {
+            for (int j = 0; j < 4; j++) {
+                if(tabPiece[i][j]){
+                    if (y+j >= basY){
+                        basY=y+j;
+                        basX=x+i;
+                    }
+                }
+            }
+        }
+    }
+
+    public void run() {  //on update les x,y,basX,basY
+
         int nextY = y;
         int nextX = x;
 
-        nextY += dY;
+        int nextBasY=basY;
+        int nextBasX=basX;
 
-        if (grille.validationPosition(nextX, nextY)) {
+        nextY += dY;
+        nextBasY += dY;
+
+        //pour le moment on rajoute pas de x pour la bouger
+        //apres on rajoutera dX
+
+        if (grille.validationPosition(nextBasX, nextBasY)) {
             y = nextY;
             x = nextX;
+            basY=nextBasY;
+            basX=nextBasX;
             //System.out.println("pos" + x + " "+ y);
         } else {
             dY *= 0;
