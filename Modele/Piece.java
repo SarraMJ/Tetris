@@ -16,23 +16,124 @@ public class Piece implements Runnable {
     private int codeCouleur = 5;
     private GrilleSimple grille;
 
-    public void randPiece(){
-        Random random = new Random();
+    public void randPiece(int rand){
+        /*Random random = new Random();
         for (int i=0;i<4;i++){
             for (int j=0;j<4;j++){
                 tabPiece[i][j]= random.nextBoolean();
             }
+        } */
+        if (rand==1){ // forme I-Tetrimino ou baton
+            int i=0;
+            int j=0;
+            for (i=0;i<4;i++){
+                tabPiece[i][j]=true;
+            }
+            for(i=0;i<4;i++){
+                for(j=1;j<4;j++){
+                    tabPiece[i][j]=false;
+                }
+            }
         }
+        if (rand ==2){ //O_tetrimino
+            for (int a=0; a< 4; a++){
+                for(int b= 0; b<4; b++){
+                    tabPiece[a][b]= false;
+                }
+            }
+            tabPiece[0][0] = true;
+            tabPiece[1][0] = true;
+            tabPiece[0][1] = true;
+            tabPiece[1][1] = true;
+        }
+        if (rand==3){ //T-Termino
+            int j=0;
+            int i=0;
+
+            for(i=0;i<4;i++){ //toutes les cases à false
+                for(j=0;j<4;j++){
+                    tabPiece[i][j]=false;
+                }
+            }
+            for (i=0;i<3;i++){
+                j=0;
+                tabPiece[i][j]=true;
+            }
+            tabPiece[1][1]=true;
+        }
+
+        if (rand == 4){ // L_tetrimino
+            for (int a=0; a< 4; a++){
+                for(int b= 0; b<4; b++){
+                    tabPiece[a][b]= false;
+                }
+            }
+            tabPiece[0][0] = true;
+            tabPiece[1][0] = true;
+            tabPiece[0][1] = true;
+            tabPiece[2][0] = true;
+
+        }
+
+        if(rand==5){ //J-Termino
+            int j=0;
+            int i=0;
+
+            for(i=0;i<4;i++){ //toutes les cases à false
+                for(j=0;j<4;j++){
+                    tabPiece[i][j]=false;
+                }
+            }
+            for (i=0;i<3;i++){
+                j=0;
+                tabPiece[i][j]=true;
+            }
+            tabPiece[2][1]=true;
+        }
+
+        if(rand==6) { //J-Termino
+            int j = 0;
+            int i = 0;
+
+            for (i = 0; i < 4; i++) { //toutes les cases à false
+                for (j = 0; j < 4; j++) {
+                    tabPiece[i][j] = false;
+                }
+            }
+            for (i = 0; i < 2; i++) {
+                j = 0;
+                tabPiece[i][j] = true;
+            }
+
+            tabPiece[1][1] = true;
+            tabPiece[2][1] = true;
+        }
+        if (rand == 7){// S_tetrimino
+            for (int a=0; a< 4; a++){
+                for(int b= 0; b<4; b++){
+                    tabPiece[a][b]= false;
+                }
+            }
+            tabPiece[1][0] = true;
+            tabPiece[2][0] = true;
+            tabPiece[0][1] = true;
+            tabPiece[1][1] = true;
+
+        }
+
     }
 
     public Piece(GrilleSimple _grille) {
 
         grille = _grille;
         tabPiece= new boolean[4][4];
-        randPiece();
+        Random random = new Random();
+        int rand = random.nextInt(7) + 1;
+        System.out.print(" LE RAND EST " + rand);
+        randPiece(rand);
         plusbasY();
-        System.out.print("basX "+basX);
-        System.out.print("basY "+basY);
+        System.out.print(" basX "+basX);
+        System.out.print(" basY "+basY);
     }
 
 
