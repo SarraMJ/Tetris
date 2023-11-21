@@ -11,14 +11,6 @@ public class Piece implements Runnable {
 
     private int codeCouleur = 5;
     private GrilleSimple grille;
-    
-
-    public Piece(GrilleSimple _grille) {
-
-        grille = _grille;
-        tabPiece= new boolean[4][4];
-    }
-
 
     public void randPiece(){
         Random random = new Random();
@@ -28,6 +20,16 @@ public class Piece implements Runnable {
             }
         }
     }
+
+    public Piece(GrilleSimple _grille) {
+
+        grille = _grille;
+        tabPiece= new boolean[4][4];
+        randPiece();
+    }
+
+
+
 
     // Méthode d'exemple pour afficher le tableau
     public void afficherTableau() {
@@ -76,6 +78,8 @@ public class Piece implements Runnable {
         return y;
     }
 
-
+    public boolean getTabPiece(int i,int j){
+        return tabPiece[i][j];
+    }
 
 }
