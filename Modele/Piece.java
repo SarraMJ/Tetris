@@ -16,6 +16,8 @@ public class Piece implements Runnable {
     private int codeCouleur = 5;
     private GrilleSimple grille;
 
+    private Orientation orientation = Orientation.ORIGINALE;
+
     public void randPiece(int rand){
         /*Random random = new Random();
         for (int i=0;i<4;i++){
@@ -26,13 +28,15 @@ public class Piece implements Runnable {
         if (rand==1){ // forme I-Tetrimino ou baton
             int i=0;
             int j=0;
-            for (i=0;i<4;i++){
-                tabPiece[i][j]=true;
-            }
+
             for(i=0;i<4;i++){
-                for(j=1;j<4;j++){
+                for(j=0;j<4;j++){
                     tabPiece[i][j]=false;
                 }
+            }
+            for (i=0;i<4;i++){
+                j=1;
+                tabPiece[i][j]=true;
             }
         }
         if (rand ==2){ //O_tetrimino
@@ -41,10 +45,10 @@ public class Piece implements Runnable {
                     tabPiece[a][b]= false;
                 }
             }
-            tabPiece[0][0] = true;
-            tabPiece[1][0] = true;
-            tabPiece[0][1] = true;
             tabPiece[1][1] = true;
+            tabPiece[2][1] = true;
+            tabPiece[1][2] = true;
+            tabPiece[2][2] = true;
         }
         if (rand==3){ //T-Termino
             int j=0;
@@ -55,11 +59,11 @@ public class Piece implements Runnable {
                     tabPiece[i][j]=false;
                 }
             }
-            for (i=0;i<3;i++){
-                j=0;
+            for (i=1;i<4;i++){
+                j=1;
                 tabPiece[i][j]=true;
             }
-            tabPiece[1][1]=true;
+            tabPiece[2][2]=true;
         }
 
         if (rand == 4){ // L_tetrimino
@@ -68,10 +72,10 @@ public class Piece implements Runnable {
                     tabPiece[a][b]= false;
                 }
             }
-            tabPiece[0][0] = true;
-            tabPiece[1][0] = true;
-            tabPiece[0][1] = true;
-            tabPiece[2][0] = true;
+            tabPiece[3][1] = true;
+            tabPiece[1][1] = true;
+            tabPiece[2][1] = true;
+            tabPiece[1][2] = true;
 
         }
 
@@ -84,14 +88,13 @@ public class Piece implements Runnable {
                     tabPiece[i][j]=false;
                 }
             }
-            for (i=0;i<3;i++){
-                j=0;
-                tabPiece[i][j]=true;
-            }
+            tabPiece[0][1]=true;
+            tabPiece[1][1]=true;
+            tabPiece[2][2]=true;
             tabPiece[2][1]=true;
         }
 
-        if(rand==6) { //J-Termino
+        if(rand==6) { //Z-Termino
             int j = 0;
             int i = 0;
 
@@ -100,24 +103,23 @@ public class Piece implements Runnable {
                     tabPiece[i][j] = false;
                 }
             }
-            for (i = 0; i < 2; i++) {
-                j = 0;
-                tabPiece[i][j] = true;
-            }
 
             tabPiece[1][1] = true;
             tabPiece[2][1] = true;
+            tabPiece[2][2] = true;
+            tabPiece[3][2] = true;
         }
+
         if (rand == 7){// S_tetrimino
             for (int a=0; a< 4; a++){
                 for(int b= 0; b<4; b++){
                     tabPiece[a][b]= false;
                 }
             }
-            tabPiece[1][0] = true;
-            tabPiece[2][0] = true;
-            tabPiece[0][1] = true;
-            tabPiece[1][1] = true;
+            tabPiece[2][1] = true;
+            tabPiece[3][1] = true;
+            tabPiece[1][2] = true;
+            tabPiece[2][2] = true;
 
         }
 
@@ -129,11 +131,10 @@ public class Piece implements Runnable {
         tabPiece= new boolean[4][4];
         Random random = new Random();
         int rand = random.nextInt(7) + 1;
-        System.out.print(" LE RAND EST " + rand);
+        rand=7;
         randPiece(rand);
         plusbasY();
-        System.out.print(" basX "+basX);
-        System.out.print(" basY "+basY);
+
     }
 
 
@@ -149,12 +150,33 @@ public class Piece implements Runnable {
         }
     }
 
+    public void nextOrientation(){
 
+
+        switch (orientation) {
+            case ORIGINALE:
+                orientation=Orientation.DROITE;
+                break;
+            case DROITE:
+                orientation=Orientation.ENBAS;
+                break;
+            case ENBAS:
+                orientation=Orientation.GAUCHE;
+                break;
+            case GAUCHE:
+                orientation=Orientation.ORIGINALE;
+                break;
+
+        }
+
+    }
 
     public void action() {
-        if(dY==1) {
-            dY *= 0;
-        }else dY=1;
+        nextOrientation();
+        System.out.print(" "+orientation+" ");
+        rotation(orientation);
+
+
     }
 
     public void plusbasY(){ //les coordonnees de la case la plus basse de la piece qui est true
@@ -211,8 +233,58 @@ public class Piece implements Runnable {
         return y;
     }
 
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
     public boolean getTabPiece(int i,int j){
         return tabPiece[i][j];
     }
+
+    public void rotation(Orientation nouvelleOrientation) {
+        boolean[][] nouveauTabPiece = new boolean[4][4];
+
+        // Effectue la rotation en fonction de la nouvelle orientation
+        switch (nouvelleOrientation) {
+            case ORIGINALE:
+                // Aucune rotation, c'est le tableau d'origine
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        nouveauTabPiece[i][j] = tabPiece[i][j];
+                    }
+                }
+                break;
+            case DROITE:
+                // Fais la rotation à droite
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        nouveauTabPiece[i][j] = tabPiece[3-j][i];
+                    }
+                }
+                break;
+            case ENBAS:
+                // Fais la rotation vers le bas
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        nouveauTabPiece[i][j] = tabPiece[3-i][3-j];
+                    }
+                }
+                break;
+            case GAUCHE:
+                // Fais la rotation à gauche
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        nouveauTabPiece[i][j] = tabPiece[j][3-i];
+                    }
+                }
+                break;
+        }
+
+
+            tabPiece = nouveauTabPiece;
+            orientation = nouvelleOrientation;
+            plusbasY();
+    }
+
 
 }
