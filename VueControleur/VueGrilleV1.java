@@ -41,7 +41,20 @@ public class VueGrilleV1 extends JPanel implements Observer {
 
             }
         }
-        tab[modele.getPieceCourante().getx()][modele.getPieceCourante().gety()].setBackground(Color.BLUE);
+
+        //tab[modele.getPieceCourante().getx()][modele.getPieceCourante().gety()].setBackground(Color.BLUE);
+
+
+        int pieceX = modele.getPieceCourante().getx();
+        int pieceY = modele.getPieceCourante().gety();
+
+        // Colorer le panneau correspondant à la pièce courante en bleu
+        tab[pieceX][pieceY].setBackground(Color.BLUE);
+
+        // Colorer le panneau voisin à droite en rouge
+        if (pieceX + 1 < modele.TAILLE) {
+            tab[pieceX + 1][pieceY].setBackground(Color.RED);
+        }
 
     }
 

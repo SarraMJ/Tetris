@@ -7,7 +7,7 @@ public class GrilleSimple extends Observable implements Runnable {
 
     public final int TAILLE = 20;
 
-    private CaseSimple pieceCourante = new CaseSimple(this);
+    private Piece pieceCourante = new Piece(this);
 
 
     public GrilleSimple() { //constructeur
@@ -22,6 +22,7 @@ public class GrilleSimple extends Observable implements Runnable {
 
     }
 
+    //si dans la grille à la prochaine position
     public boolean validationPosition(int _nextX, int _nextY) {
         return (_nextY>=0 && _nextY < TAILLE);
     }
@@ -34,7 +35,7 @@ public class GrilleSimple extends Observable implements Runnable {
 
     }
 
-    public CaseSimple getPieceCourante() {
+    public Piece getPieceCourante() {
         return pieceCourante;
     }
 
