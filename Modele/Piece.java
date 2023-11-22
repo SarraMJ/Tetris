@@ -28,6 +28,7 @@ public class Piece implements Runnable {
             }
         } */
         if (rand==1){ // forme I-Tetrimino ou baton
+            codeCouleur=1;
             int i=0;
             int j=0;
 
@@ -42,6 +43,7 @@ public class Piece implements Runnable {
             }
         }
         if (rand ==2){ //O_tetrimino
+            codeCouleur=2;
             for (int a=0; a< 4; a++){
                 for(int b= 0; b<4; b++){
                     tabPiece[a][b]= false;
@@ -53,6 +55,7 @@ public class Piece implements Runnable {
             tabPiece[2][2] = true;
         }
         if (rand==3){ //T-Termino
+            codeCouleur=3;
             int j=0;
             int i=0;
 
@@ -69,6 +72,7 @@ public class Piece implements Runnable {
         }
 
         if (rand == 4){ // L_tetrimino
+            codeCouleur=4;
             for (int a=0; a< 4; a++){
                 for(int b= 0; b<4; b++){
                     tabPiece[a][b]= false;
@@ -82,6 +86,7 @@ public class Piece implements Runnable {
         }
 
         if(rand==5){ //J-Termino
+            codeCouleur=5;
             int j=0;
             int i=0;
 
@@ -97,6 +102,7 @@ public class Piece implements Runnable {
         }
 
         if(rand==6) { //Z-Termino
+            codeCouleur=6;
             int j = 0;
             int i = 0;
 
@@ -113,6 +119,7 @@ public class Piece implements Runnable {
         }
 
         if (rand == 7){// S_tetrimino
+            codeCouleur=7;
             for (int a=0; a< 4; a++){
                 for(int b= 0; b<4; b++){
                     tabPiece[a][b]= false;
@@ -133,6 +140,7 @@ public class Piece implements Runnable {
         tabPiece= new boolean[4][4];
         Random random = new Random();
         int rand = random.nextInt(7) + 1;
+        rand=6;
         randPiece(rand);
         plusbasY();
 
@@ -238,6 +246,8 @@ public class Piece implements Runnable {
     public Orientation getOrientation() {
         return orientation;
     }
+
+
 
     public boolean getTabPiece(int i,int j){
         return tabPiece[i][j];

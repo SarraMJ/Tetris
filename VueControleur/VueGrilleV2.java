@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.Observable;
 import java.util.Observer;
+import java.awt.Color;
+import java.util.Random;
 
 class VueGrilleV2 extends JPanel implements Observer {
 
@@ -43,7 +45,10 @@ class VueGrilleV2 extends JPanel implements Observer {
 
                 }
 
-                g.setColor(Color.BLUE);
+
+                Color ColorP = obtenirCouleur();
+                g.setColor(ColorP);
+
                 int PieceX=modele.getPieceCourante().getx();
                 int PieceY=modele.getPieceCourante().gety();
 
@@ -51,7 +56,7 @@ class VueGrilleV2 extends JPanel implements Observer {
                     for(int j=0;j<4;j++){
                         if (modele.getPieceCourante().getTabPiece(i,j)){
 
-                            g.setColor(Color.BLUE);
+                            g.setColor(ColorP);
                             g.fillRect((PieceX * TAILLE)+(TAILLE*i), (PieceY * TAILLE)+(TAILLE*j), TAILLE, TAILLE);
                         }
                     }
@@ -79,5 +84,31 @@ class VueGrilleV2 extends JPanel implements Observer {
         g.dispose();
         //Toolkit.getDefaultToolkit().sync(); // forcer la synchronisation
         bs.show();
+    }
+
+    public Color obtenirCouleur() {
+
+        if(modele.getPieceCourante().getCodeCouleur()==1) {
+            return Color.CYAN;
+        }
+        if(modele.getPieceCourante().getCodeCouleur()==2) {
+            return Color.YELLOW;
+        }
+        if(modele.getPieceCourante().getCodeCouleur()==3) {
+            return new Color(128, 0, 128); // Violet
+        }
+        if(modele.getPieceCourante().getCodeCouleur()==4) {
+            return Color.ORANGE;
+        }
+        if(modele.getPieceCourante().getCodeCouleur()==5) {
+            return Color.BLUE;
+        }
+        if(modele.getPieceCourante().getCodeCouleur()==6) {
+            return Color.RED;
+        }
+        if(modele.getPieceCourante().getCodeCouleur()==7) {
+            return Color.GREEN;
+        }
+        else return Color.BLACK;
     }
 }
