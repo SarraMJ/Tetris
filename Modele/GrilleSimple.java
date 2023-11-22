@@ -9,11 +9,18 @@ public class GrilleSimple extends Observable implements Runnable {
 
     private Piece pieceCourante = new Piece(this);
 
+    private boolean[][] tabGrille;
+
 
     public GrilleSimple() { //constructeur
 
         new OrdonnanceurSimple(this).start(); // pour changer le temps de pause, garder la référence de l'ordonnanceur
-
+        tabGrille= new boolean[21][21];
+        for (int i=0;i<21;i++){
+            for(int j=0;j<21;j++){
+                tabGrille[i][j]=false;
+            }
+        }
     }
 
     public void action() {  //applique la fonction action sur la pièce
@@ -55,5 +62,15 @@ public class GrilleSimple extends Observable implements Runnable {
         return pieceCourante;
     }
 
+    public void setPieceCourante(Piece p){
+        pieceCourante=p;
+    }
+    public boolean[][] getTabGrille(){
+        return tabGrille;
+    }
+
+    public void setTabGrille(int i,int j,boolean b){
+        tabGrille[i][j]=b;
+    }
 
 }

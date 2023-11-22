@@ -3,8 +3,8 @@ import java.util.Random;
 
 public class Piece implements Runnable {
 
-    private int x = 5;
-    private int y = 5;
+    private int x = 7;
+    private int y = 0;
 
     //coordonnees de la case la plus basse qui est true
     private int basX;
@@ -140,7 +140,6 @@ public class Piece implements Runnable {
         tabPiece= new boolean[4][4];
         Random random = new Random();
         int rand = random.nextInt(7) + 1;
-        rand=6;
         randPiece(rand);
         plusbasY();
 
@@ -226,6 +225,21 @@ public class Piece implements Runnable {
             //System.out.println("pos" + x + " "+ y);
         } else {
             dY *= 0;
+
+            //on stocke les cases true dans le tableau de la grille
+            int w=x;
+            int z=y;
+            for (int i=0;i<4;i++) {
+                for (int j = 0; j < 4; j++) {
+                    System.out.println(" LE Y "+y);
+                    w=x+i;
+                    z=y+j;
+                    grille.setTabGrille(w,z,tabPiece[i][j]);
+                }
+            }
+
+            Piece p=new Piece(grille);
+            grille.setPieceCourante(p);
         }
 
 
