@@ -1,5 +1,6 @@
 package VueControleur;
 
+import Modele.Direction;
 import Modele.GrilleSimple;
 
 import javax.swing.*;
@@ -10,7 +11,11 @@ import java.util.Observer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+
+
 public class VC extends JFrame implements Observer {
+
+
 
     JTextField jt = new JTextField("");
     JButton jb = new JButton("do");
@@ -38,6 +43,7 @@ public class VC extends JFrame implements Observer {
         jb.addActionListener(new ActionListener() { //évènement bouton : object contrôleur qui réceptionne
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.print(" Bouton ");
                 ex.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -46,16 +52,98 @@ public class VC extends JFrame implements Observer {
                 });
             }
         });
+/*
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_SPACE:
+                        modele.action();
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        ex.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                modele.getPieceCourante().translation(Direction.DROITE);
+                            }
+                        });
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        ex.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                modele.getPieceCourante().translation(Direction.GAUCHE);
+                            }
+                        });
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        ex.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                modele.getPieceCourante().translation(Direction.BAS);
+                            }
+                        });
+                        break;
+                }
+            }
+        }); */
+
+
 
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) { //évènement clavier : object contrôleur qui réceptionne
                 super.keyPressed(e);
+                System.out.print(" Bouton2 ");
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_SPACE: modele.action();
+
                 }
             }
         });
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) { //translation a droite
+                super.keyPressed(e);
+                System.out.print(" VK_RIGHT ");
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_RIGHT:
+                        modele.getPieceCourante().translation(Direction.DROITE);
+                        break;
+                }
+            }
+        });
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) { //translation a gauche
+                super.keyPressed(e);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        modele.getPieceCourante().translation(Direction.GAUCHE);
+                        break;
+                }
+            }
+        });
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_DOWN:
+                        modele.getPieceCourante().translation(Direction.BAS);
+                        break;
+                }
+            }
+        });
+
+
+
+        setFocusable(true);
+        requestFocusInWindow();
 
 
     }

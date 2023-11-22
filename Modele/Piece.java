@@ -18,6 +18,8 @@ public class Piece implements Runnable {
 
     private Orientation orientation = Orientation.ORIGINALE;
 
+
+
     public void randPiece(int rand){
         /*Random random = new Random();
         for (int i=0;i<4;i++){
@@ -131,7 +133,6 @@ public class Piece implements Runnable {
         tabPiece= new boolean[4][4];
         Random random = new Random();
         int rand = random.nextInt(7) + 1;
-        rand=7;
         randPiece(rand);
         plusbasY();
 
@@ -175,6 +176,7 @@ public class Piece implements Runnable {
         nextOrientation();
         System.out.print(" "+orientation+" ");
         rotation(orientation);
+
 
 
     }
@@ -280,10 +282,38 @@ public class Piece implements Runnable {
                 break;
         }
 
+            if(grille.validationTab(x,y,nouveauTabPiece)) {
+                tabPiece = nouveauTabPiece;
+                orientation = nouvelleOrientation;
+                plusbasY();
+            }
+    }
 
-            tabPiece = nouveauTabPiece;
-            orientation = nouvelleOrientation;
-            plusbasY();
+    public void translation(Direction direction) {
+        int nextY = y;
+        int nextX = x;
+
+        switch (direction) {
+
+            case DROITE:
+                nextX++;
+                break;
+            case BAS:
+                nextY++;
+                break;
+            case GAUCHE:
+                nextX--;
+                break;
+        }
+
+        // Vérifier si la nouvelle position est valide dans la grille
+
+
+            if (grille.validationTab(nextX, nextY, tabPiece)) {
+                y = nextY;
+                x = nextX;
+                plusbasY(); // Mettre à jour les coordonnées de la case la plus basse
+            }
     }
 
 

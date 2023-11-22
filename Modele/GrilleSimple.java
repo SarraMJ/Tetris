@@ -27,6 +27,22 @@ public class GrilleSimple extends Observable implements Runnable {
         return (_nextY>=0 && _nextY < TAILLE);
     }
 
+    public boolean validationTab(int x,int y,boolean[][] tab) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (tab[i][j]) {
+                    int coordX = x + i;
+                    int coordY = y + j;
+
+                    if ( coordX >= TAILLE ||coordY >= TAILLE|| coordX < 0|| coordY < 0 ) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public void run() {
 
         pieceCourante.run();
