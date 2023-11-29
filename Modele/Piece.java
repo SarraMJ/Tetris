@@ -1,4 +1,5 @@
 package Modele;
+import java.awt.*;
 import java.util.Random;
 
 public class Piece implements Runnable {
@@ -12,6 +13,8 @@ public class Piece implements Runnable {
     private int dY = 1;
 
     private boolean[][] tabPiece;
+
+    //private Couleur[][] tabPieceCouleur;
 
     private int codeCouleur = 5;
     private GrilleSimple grille;
@@ -247,6 +250,28 @@ public class Piece implements Runnable {
 
     public int getCodeCouleur() {
         return codeCouleur;
+    }
+
+    public Couleur getCouleurfromCode(int codeColor){
+        switch (codeColor) {
+            case 1:
+                return Couleur.CYAN;
+            case 2:
+                return Couleur.YELLOW;
+            case 3:
+                return Couleur.PURPLE;
+            case 4:
+                return Couleur.ORANGE;
+            case 5:
+                return Couleur.BLUE;
+            case 6:
+                return Couleur.RED;
+            case 7:
+                return Couleur.GREEN;
+
+        }
+        return Couleur.BLACK;
+
     }
 
     public int getx() {

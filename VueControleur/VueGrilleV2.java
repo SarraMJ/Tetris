@@ -1,6 +1,8 @@
 package VueControleur;
 
+import Modele.Couleur;
 import Modele.GrilleSimple;
+import Modele.Piece;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,18 +37,17 @@ class VueGrilleV2 extends JPanel implements Observer {
 
                 for (int i = 0; i < modele.TAILLE; i++) {
                     for (int j = 0; j < modele.TAILLE; j++) {
-                        //if (!(i == modele.getPieceCourante().getx() && j == modele.getPieceCourante().gety())) {
-                        boolean[][] tabG;
+                        //if (!(i == modele.getPieceCourante().getx() && j == modele.getPieceCourante().gety()))
+                        Couleur[][] tabG;
                         tabG= modele.getTabGrille();
-                        Color couleurCase;
-                        couleurCase=obtenirCouleur();
+                        Couleur couleurCase = tabG[i][j];
+                        Color ColorCase=switchCouleurToColor(couleurCase) ;
+                        Piece p=modele.getPieceCourante();
+                        couleurCase=p.getCouleurfromCode(p.getCodeCouleur());
 
-                        if(!tabG[i][j]) {
-                            g.setColor(Color.WHITE);
-                        }
-                        if(tabG[i][j]) {
-                            g.setColor(couleurCase);
-                        }
+
+                        g.setColor(ColorCase);
+
                         g.fillRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE);
                         g.setColor(Color.BLACK);
                         g.drawRoundRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE, 1, 1);
@@ -120,5 +121,30 @@ class VueGrilleV2 extends JPanel implements Observer {
             return Color.GREEN;
         }
         else return Color.BLACK;
+    }
+
+    public Color switchCouleurToColor(Couleur couleur) {
+        switch (couleur) {
+            case CYAN:
+                return Color.CYAN;
+            case YELLOW:
+                return Color.YELLOW;
+            case PURPLE:
+                return new Color(128, 0, 128);
+            case ORANGE:
+                return Color.ORANGE;
+            case BLUE:
+                return Color.BLUE;
+            case RED:
+                return Color.RED;
+            case GREEN:
+                return Color.GREEN;
+            case WHITE:
+                return Color.WHITE;
+            case BLACK:
+                return Color.BLACK;
+
+        }
+        return Color.BLACK;
     }
 }
