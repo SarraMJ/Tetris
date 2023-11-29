@@ -184,12 +184,22 @@ public class Piece implements Runnable {
 
     public void action() {
         nextOrientation();
-        System.out.print(" "+orientation+" ");
-        rotation(orientation);
-
-
-
+        System.out.print(" " + orientation + " ");
+        // Vérifier la collision avec la grille
+        if (grille.validationTab(x, y, tabPiece)) {
+            // Vérifier la collision avec d'autres pièces
+            if (grille.validationCollision(x, y, tabPiece)) {
+                // Collision détectée, arrêter la pièce ou effectuer d'autres actions nécessaires
+                // Générer une nouvelle pièce
+                Piece p = new Piece(grille);
+                grille.setPieceCourante(p);
+            } else {
+                // Aucune collision avec d'autres pièces, effectuer la rotation
+                rotation(orientation);
+            }
+        }
     }
+
 
     public void plusbasY(){ //les coordonnees de la case la plus basse de la piece qui est true
         basY=y;
@@ -359,9 +369,18 @@ public class Piece implements Runnable {
 
 
             if (grille.validationTab(nextX, nextY, tabPiece)) {
-                y = nextY;
-                x = nextX;
-                plusbasY(); // Mettre à jour les coordonnées de la case la plus basse
+                if (grille.validationCollision(nextX, nextY, tabPiece)) {
+                    // Collision! arrêter la pièce
+                    // mettre à jour la pièce courante
+                    // Générer une nouvelle pièce
+                    Piece p = new Piece(grille);
+                    grille.setPieceCourante(p);
+                }
+                else {
+                    y = nextY;
+                    x = nextX;
+                    plusbasY(); // Mettre à jour les coordonnées de la case la plus basse
+                }
             }
     }
 
