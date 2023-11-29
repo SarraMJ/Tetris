@@ -220,7 +220,7 @@ public class Piece implements Runnable {
         //pour le moment on rajoute pas de x pour la bouger
         //apres on rajoutera dX
 
-        if (grille.validationPosition(nextBasX, nextBasY)) {
+        if (grille.validationPosition(nextBasX, nextBasY) && !grille.validationCollision(nextX,nextY,tabPiece)) {
             y = nextY;
             x = nextX;
             basY=nextBasY;

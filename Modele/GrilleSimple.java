@@ -34,6 +34,26 @@ public class GrilleSimple extends Observable implements Runnable {
         return (_nextY>=0 && _nextY < TAILLE);
     }
 
+    public boolean validationCollision(int x, int y, boolean[][] tabPiece) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (tabPiece[i][j]) {
+                    int coordX = x + i;
+                    int coordY = y + j;
+
+                    // Vérifier si la case est déjà occupée par une autre pièce dans la grille
+                    if (coordX >= 0 && coordX < TAILLE && coordY >= 0 && coordY < TAILLE) {
+                        if (tabGrille[coordX][coordY] != Couleur.WHITE) {
+                            return true; // Collision détectée
+                        }
+                    }
+                }
+            }
+        }
+        return false; // Aucune collision détectée
+    }
+
+
     public boolean validationTab(int x,int y,boolean[][] tab) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
