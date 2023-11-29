@@ -70,7 +70,12 @@ public class GrilleSimple extends Observable implements Runnable {
     }
 
     public void setTabGrille(int i,int j,boolean b){
-        tabGrille[i][j]=b;
+        if (i >= 0 && i < 21 && j >= 0 && j < 21) {
+            tabGrille[i][j] = b;
+        } else {
+            // Gérer l'erreur ou afficher un message approprié si les indices sont hors limites.
+           // System.err.println("Indices hors limites pour setTabGrille : i=" + i + ", j=" + j);
+        }
     }
 
 }
