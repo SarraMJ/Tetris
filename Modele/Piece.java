@@ -5,7 +5,7 @@ import java.util.Random;
 public class Piece implements Runnable {
 
     private int x = 7;
-    private int y = 0;
+    private int y = -1;
 
     //coordonnees de la case la plus basse qui est true
     private int basX;
@@ -188,19 +188,21 @@ public class Piece implements Runnable {
     }
 
     public void action() {
-        nextOrientation();
-        //System.out.print(" " + orientation + " ");
-        // Vérifier la collision avec la grille
-        if (grille.validationTab(x, y, tabPiece)) {
-            // Vérifier la collision avec d'autres pièces
-            if (grille.validationCollision(x, y, tabPiece)) {
-                // Collision détectée, arrêter la pièce ou effectuer d'autres actions nécessaires
-                // Générer une nouvelle pièce
-                Piece p = new Piece(grille);
-                grille.setPieceCourante(p);
-            } else {
-                // Aucune collision avec d'autres pièces, effectuer la rotation
-                rotation(orientation);
+        if(!paused) {
+            nextOrientation();
+            //System.out.print(" " + orientation + " ");
+            // Vérifier la collision avec la grille
+            if (grille.validationTab(x, y, tabPiece)) {
+                // Vérifier la collision avec d'autres pièces
+                if (grille.validationCollision(x, y, tabPiece)) {
+                    // Collision détectée, arrêter la pièce ou effectuer d'autres actions nécessaires
+                    // Générer une nouvelle pièce
+                    Piece p = new Piece(grille);
+                    grille.setPieceCourante(p);
+                } else {
+                    // Aucune collision avec d'autres pièces, effectuer la rotation
+                    rotation(orientation);
+                }
             }
         }
     }
@@ -360,23 +362,24 @@ public class Piece implements Runnable {
     }
 
     public void translation(Direction direction) {
-        int nextY = y;
-        int nextX = x;
+        if (!paused) {
+            int nextY = y;
+            int nextX = x;
 
-        switch (direction) {
+            switch (direction) {
 
-            case DROITE:
-                nextX++;
-                break;
-            case BAS:
-                nextY++;
-                break;
-            case GAUCHE:
-                nextX--;
-                break;
-        }
+                case DROITE:
+                    nextX++;
+                    break;
+                case BAS:
+                    nextY++;
+                    break;
+                case GAUCHE:
+                    nextX--;
+                    break;
+            }
 
-        // Vérifier si la nouvelle position est valide dans la grille
+            // Vérifier si la nouvelle position est valide dans la grille
 
 
             if (grille.validationTab(nextX, nextY, tabPiece)) {
@@ -386,13 +389,13 @@ public class Piece implements Runnable {
                     // Générer une nouvelle pièce
                     Piece p = new Piece(grille);
                     grille.setPieceCourante(p);
-                }
-                else {
+                } else {
                     y = nextY;
                     x = nextX;
                     plusbasY(); // Mettre à jour les coordonnées de la case la plus basse
                 }
             }
+        }
     }
 
 
