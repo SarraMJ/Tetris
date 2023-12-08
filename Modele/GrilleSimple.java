@@ -11,6 +11,8 @@ public class GrilleSimple extends Observable implements Runnable {
 
     private Couleur[][] tabGrille;
 
+    private int score = 0;
+
 
     public GrilleSimple() { //constructeur
 
@@ -118,7 +120,6 @@ public class GrilleSimple extends Observable implements Runnable {
 
             if (ligneRemplie) {
                 removeLineAndShiftDown(i);
-                System.out.println(" En dehors de remove line ");
                 setChanged(); // Indiquer que la grille a été modifiée
                 notifyObservers(); // Notifier les observateurs pour le rafraîchissement
                 i++; // Révérifier la même ligne, car tout a été décalé vers le bas
@@ -130,7 +131,6 @@ public class GrilleSimple extends Observable implements Runnable {
         for (int i = ligne; i > 0; i--) {
             for (int j = 0; j < TAILLE; j++) {
                 tabGrille[j][i] = tabGrille[j][i-1];
-                System.out.println(" on change tabGrille ");
             }
         }
 
@@ -138,9 +138,11 @@ public class GrilleSimple extends Observable implements Runnable {
         for (int j = 0; j < TAILLE; j++) {
             tabGrille[j][0] = Couleur.WHITE;
         }
+        score+=100;
+        System.out.println("Le score est "+score);
     }
 
-
-
-
+    public int getScore() {
+        return score;
+    }
 }

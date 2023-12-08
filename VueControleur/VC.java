@@ -23,20 +23,42 @@ public class VC extends JFrame implements Observer {
     Observer vueGrille;
     private Executor ex =  Executors.newSingleThreadExecutor();
 
+    JLabel scoreLabel = new JLabel("Score: 0");
+
     public VC(GrilleSimple _modele) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         modele = _modele;
 
-        setSize(350, 400);
-        JPanel jp = new JPanel(new BorderLayout());
-        jp.add(jt, BorderLayout.NORTH);
-        jp.add(jb, BorderLayout.SOUTH);
+        setSize(350, 500);
+        // Panneau principal avec BorderLayout
+        // Panneau principal avec BorderLayout
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(jt, BorderLayout.NORTH);
+        // Panneau pour la grille
+        vueGrille = new VueGrilleV2(modele);
+        JPanel grillePanel = (JPanel) vueGrille;
 
-       // vueGrille = new VueGrilleV1(modele); // composants swing, saccades
-        vueGrille = new VueGrilleV2(modele); // composant AWT dédié
+        // Panneau pour le score et le bouton pause avec BoxLayout
+        JPanel scorePausePanel = new JPanel();
+        scorePausePanel.setLayout(new BoxLayout(scorePausePanel, BoxLayout.Y_AXIS));
 
-        jp.add((JPanel)vueGrille, BorderLayout.CENTER);
-        setContentPane(jp);
+        // Ajout du score au panneau
+        scorePausePanel.add(scoreLabel);
+
+        // Ajout d'un espace vertical entre le score et le bouton pause
+        scorePausePanel.add(Box.createVerticalStrut(10));
+
+        // Ajout du bouton pause au panneau
+        scorePausePanel.add(jb);
+
+        // Ajout de la grille au centre
+        mainPanel.add(grillePanel, BorderLayout.CENTER);
+
+        // Ajout du panneau scorePause au sud
+        mainPanel.add(scorePausePanel, BorderLayout.SOUTH);
+
+        // Ajout du panneau principal
+        setContentPane(mainPanel);
 
 
         jb.addActionListener(new ActionListener() { //évènement bouton : object contrôleur qui réceptionne
@@ -174,6 +196,7 @@ public class VC extends JFrame implements Observer {
                 vueGrille.update(o, arg);
 
                 jt.setText("Elapsed time : " + (System.currentTimeMillis() - lastTime) + "ms - x = " + modele.getPieceCourante().getx() + " y = " + modele.getPieceCourante().gety());
+                scoreLabel.setText("Score: " + modele.getScore());
                 lastTime = System.currentTimeMillis();
 
             }
@@ -189,15 +212,15 @@ public class VC extends JFrame implements Observer {
 
         SwingUtilities.invokeLater(new Runnable() {
 
-                public void run() {
-                    GrilleSimple m = new GrilleSimple();
-                    VC vc = new VC(m);
-                    vc.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    m.addObserver(vc);
-                    vc.setVisible(true);
+                                       public void run() {
+                                           GrilleSimple m = new GrilleSimple();
+                                           VC vc = new VC(m);
+                                           vc.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                           m.addObserver(vc);
+                                           vc.setVisible(true);
 
-                }
-            }
+                                       }
+                                   }
         );
     }
 
