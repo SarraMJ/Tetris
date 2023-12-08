@@ -16,9 +16,8 @@ import java.util.concurrent.Executors;
 public class VC extends JFrame implements Observer {
 
 
-
     JTextField jt = new JTextField("");
-    JButton jb = new JButton("do");
+    JButton jb = new JButton("pause");
     GrilleSimple modele;
 
     Observer vueGrille;
@@ -43,13 +42,15 @@ public class VC extends JFrame implements Observer {
         jb.addActionListener(new ActionListener() { //évènement bouton : object contrôleur qui réceptionne
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.print(" Bouton ");
+                System.out.println(" Bouton DOOOOOO ");
                 ex.execute(new Runnable() {
                     @Override
                     public void run() {
-                        modele.action();
+                        modele.getPieceCourante().togglePause();
+
                     }
                 });
+                requestFocusInWindow();
             }
         });
 /*
@@ -140,6 +141,20 @@ public class VC extends JFrame implements Observer {
             }
         });
 
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_P:
+                        modele.getPieceCourante().togglePause();
+                        break;
+                }
+            }
+        });
+
+
+
 
 
         setFocusable(true);
@@ -165,6 +180,10 @@ public class VC extends JFrame implements Observer {
         });
 
     }
+
+
+
+
 
     public static void main(String[] args) {
 

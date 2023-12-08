@@ -14,6 +14,8 @@ public class Piece implements Runnable {
 
     private boolean[][] tabPiece;
 
+    private boolean paused = false;
+
     //private Couleur[][] tabPieceCouleur;
 
     private int codeCouleur = 5;
@@ -149,6 +151,9 @@ public class Piece implements Runnable {
     }
 
 
+    public void togglePause() {
+        paused = !paused;
+    }
 
 
     // Méthode d'exemple pour afficher le tableau
@@ -217,42 +222,43 @@ public class Piece implements Runnable {
     }
 
     public void run() {  //on update les x,y,basX,basY
+        if(!paused) {
+            int nextY = y;
+            int nextX = x;
 
-        int nextY = y;
-        int nextX = x;
+            int nextBasY = basY;
+            int nextBasX = basX;
 
-        int nextBasY=basY;
-        int nextBasX=basX;
+            nextY += dY;
+            nextBasY += dY;
 
-        nextY += dY;
-        nextBasY += dY;
+            //pour le moment on rajoute pas de x pour la bouger
+            //apres on rajoutera dX
 
-        //pour le moment on rajoute pas de x pour la bouger
-        //apres on rajoutera dX
+            if (grille.validationPosition(nextBasX, nextBasY) && !grille.validationCollision(nextX, nextY, tabPiece)) {
+                y = nextY;
+                x = nextX;
+                basY = nextBasY;
+                basX = nextBasX;
+                //System.out.println("pos" + x + " "+ y);
+            } else {
+                dY *= 0;
 
-        if (grille.validationPosition(nextBasX, nextBasY) && !grille.validationCollision(nextX,nextY,tabPiece)) {
-            y = nextY;
-            x = nextX;
-            basY=nextBasY;
-            basX=nextBasX;
-            //System.out.println("pos" + x + " "+ y);
-        } else {
-            dY *= 0;
-
-            //on stocke les cases true dans le tableau de la grille
-            int w=x;
-            int z=y;
-            for (int i=0;i<4;i++) {
-                for (int j = 0; j < 4; j++) {
-                    //System.out.println(" LE Y "+y);
-                    w=x+i;
-                    z=y+j;
-                    grille.setTabGrille(w,z,tabPiece[i][j]);
+                //on stocke les cases true dans le tableau de la grille
+                int w = x;
+                int z = y;
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        //System.out.println(" LE Y "+y);
+                        w = x + i;
+                        z = y + j;
+                        grille.setTabGrille(w, z, tabPiece[i][j]);
+                    }
                 }
-            }
 
-            Piece p=new Piece(grille);
-            grille.setPieceCourante(p);
+                Piece p = new Piece(grille);
+                grille.setPieceCourante(p);
+            }
         }
 
 
@@ -291,6 +297,11 @@ public class Piece implements Runnable {
     public int gety() {
         return y;
     }
+
+    public boolean getPaused() {
+        return paused;
+    }
+
 
     public Orientation getOrientation() {
         return orientation;
