@@ -75,6 +75,8 @@ public class GrilleSimple extends Observable implements Runnable {
         pieceCourante.run();
         setChanged(); // setChanged() + notifyObservers() : notification de la vue pour le rafraichissement
         notifyObservers();
+        //on check et enleve les lignes remplies
+        checkAndRemoveLines();
 
     }
 
@@ -98,8 +100,47 @@ public class GrilleSimple extends Observable implements Runnable {
 
         } else {
             // Gérer l'erreur ou afficher un message approprié si les indices sont hors limites.
-            System.err.println("Indices hors limites pour setTabGrille : i=" + i + ", j=" + j);
+            //System.err.println("Indices hors limites pour setTabGrille : i=" + i + ", j=" + j);
         }
     }
+
+
+
+    public void checkAndRemoveLines() {
+        for (int i = TAILLE - 1; i >= 0; i--) {
+            boolean ligneRemplie = true;
+            for (int j = 0; j < TAILLE; j++) {
+                if (tabGrille[j][i] == Couleur.WHITE) {
+                    ligneRemplie = false;
+                    break;
+                }
+            }
+
+            if (ligneRemplie) {
+                removeLineAndShiftDown(i);
+                System.out.println(" En dehors de remove line ");
+                setChanged(); // Indiquer que la grille a été modifiée
+                notifyObservers(); // Notifier les observateurs pour le rafraîchissement
+                i++; // Révérifier la même ligne, car tout a été décalé vers le bas
+            }
+        }
+    }
+
+    public void removeLineAndShiftDown(int ligne) {
+        for (int i = ligne; i > 0; i--) {
+            for (int j = 0; j < TAILLE; j++) {
+                tabGrille[j][i] = tabGrille[j][i-1];
+                System.out.println(" on change tabGrille ");
+            }
+        }
+
+        // Remettre la première ligne à vide
+        for (int j = 0; j < TAILLE; j++) {
+            tabGrille[j][0] = Couleur.WHITE;
+        }
+    }
+
+
+
 
 }

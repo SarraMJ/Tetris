@@ -155,9 +155,9 @@ public class Piece implements Runnable {
     public void afficherTableau() {
         for (int i = 0; i < tabPiece.length; i++) {
             for (int j = 0; j < tabPiece[i].length; j++) {
-                System.out.print(tabPiece[i][j] + " ");
+               // System.out.print(tabPiece[i][j] + " ");
             }
-            System.out.println();
+            //System.out.println();
         }
     }
 
@@ -184,7 +184,7 @@ public class Piece implements Runnable {
 
     public void action() {
         nextOrientation();
-        System.out.print(" " + orientation + " ");
+        //System.out.print(" " + orientation + " ");
         // Vérifier la collision avec la grille
         if (grille.validationTab(x, y, tabPiece)) {
             // Vérifier la collision avec d'autres pièces
@@ -244,7 +244,7 @@ public class Piece implements Runnable {
             int z=y;
             for (int i=0;i<4;i++) {
                 for (int j = 0; j < 4; j++) {
-                    System.out.println(" LE Y "+y);
+                    //System.out.println(" LE Y "+y);
                     w=x+i;
                     z=y+j;
                     grille.setTabGrille(w,z,tabPiece[i][j]);
