@@ -7,12 +7,13 @@ public class GrilleSimple extends Observable implements Runnable {
 
     public final int TAILLE = 20;
 
-    private Piece pieceCourante = new Piece(this);
+    private Piece pieceCourante = null;
 
     private Couleur[][] tabGrille;
 
     private int score = 0;
 
+    private boolean gameStarted = false;
 
     public GrilleSimple() { //constructeur
 
@@ -22,6 +23,13 @@ public class GrilleSimple extends Observable implements Runnable {
             for(int j=0;j<21;j++){
                 tabGrille[i][j]=Couleur.WHITE;
             }
+        }
+    }
+
+    public void startGame() {
+        if (!gameStarted) {
+            gameStarted = true;
+            pieceCourante=new Piece(this); // Créer la première pièce lorsque le jeu démarre
         }
     }
 
@@ -73,14 +81,15 @@ public class GrilleSimple extends Observable implements Runnable {
     }
 
     public void run() {
-
-        pieceCourante.run();
-        setChanged(); // setChanged() + notifyObservers() : notification de la vue pour le rafraichissement
-        notifyObservers();
-        //on check et enleve les lignes remplies
-        checkAndRemoveLines();
-
+        if (gameStarted) { // Vérifier si le jeu a démarré
+            pieceCourante.run();
+            setChanged(); // setChanged() + notifyObservers() : notification de la vue pour le rafraichissement
+            notifyObservers();
+            //on check et enleve les lignes remplies
+            checkAndRemoveLines();
+        }
     }
+
 
     public Piece getPieceCourante() {
         return pieceCourante;
@@ -157,5 +166,9 @@ public class GrilleSimple extends Observable implements Runnable {
 
     public int getScore() {
         return score;
+    }
+
+    public boolean getGameStarted() {
+        return gameStarted;
     }
 }

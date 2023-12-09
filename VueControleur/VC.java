@@ -80,6 +80,22 @@ public class VC extends JFrame implements Observer {
                 requestFocusInWindow();
             }
         });
+
+        js.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                modele.startGame();
+                requestFocusInWindow();
+            }
+        });
+
+        jq.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Add logic to quit the game
+                System.exit(0);
+            }
+        });
 /*
         addKeyListener(new KeyAdapter() {
             @Override

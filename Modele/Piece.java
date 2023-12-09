@@ -145,7 +145,7 @@ public class Piece implements Runnable {
         tabPiece= new boolean[4][4];
         Random random = new Random();
         int rand = random.nextInt(7) + 1;
-        randPiece(1);
+        randPiece(rand);
         plusbasY();
 
     }
@@ -224,7 +224,7 @@ public class Piece implements Runnable {
     }
 
     public void run() {  //on update les x,y,basX,basY
-        if(!paused) {
+        if(!paused && grille.getGameStarted()) {
             int nextY = y;
             int nextX = x;
 
