@@ -56,7 +56,7 @@ public class GrilleSimple extends Observable implements Runnable {
                     // Vérifier si la case est déjà occupée par une autre pièce dans la grille
                     if (coordX >= 0 && coordX < TAILLE && coordY >= 0 && coordY < TAILLE) {
                         if (tabGrille[coordX][coordY] != Couleur.WHITE) {
-                            if (y==0) {
+                            if (y<=0) {
                                 // La pièce courante a atteint la ligne y = 0, arrêter d'avoir de nouvelles pièces
                                 gameStarted = false;
                                 gameOver=true;
