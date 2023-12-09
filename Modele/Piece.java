@@ -145,7 +145,7 @@ public class Piece implements Runnable {
         tabPiece= new boolean[4][4];
         Random random = new Random();
         int rand = random.nextInt(7) + 1;
-        randPiece(rand);
+        randPiece(1);
         plusbasY();
 
     }

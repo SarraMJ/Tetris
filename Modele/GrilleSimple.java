@@ -109,6 +109,7 @@ public class GrilleSimple extends Observable implements Runnable {
 
 
     public void checkAndRemoveLines() {
+        int nbLignesremplies=0;
         for (int i = TAILLE - 1; i >= 0; i--) {
             boolean ligneRemplie = true;
             for (int j = 0; j < TAILLE; j++) {
@@ -119,11 +120,24 @@ public class GrilleSimple extends Observable implements Runnable {
             }
 
             if (ligneRemplie) {
+                nbLignesremplies++;
                 removeLineAndShiftDown(i);
                 setChanged(); // Indiquer que la grille a été modifiée
                 notifyObservers(); // Notifier les observateurs pour le rafraîchissement
                 i++; // Révérifier la même ligne, car tout a été décalé vers le bas
             }
+        }
+        if (nbLignesremplies==1){
+            score+=40;
+        }
+        if (nbLignesremplies==2){
+            score+=100;
+        }
+        if(nbLignesremplies==3){
+            score+=300;
+        }
+        if(nbLignesremplies==4){
+            score+=1200;
         }
     }
 
@@ -138,8 +152,7 @@ public class GrilleSimple extends Observable implements Runnable {
         for (int j = 0; j < TAILLE; j++) {
             tabGrille[j][0] = Couleur.WHITE;
         }
-        score+=100;
-        System.out.println("Le score est "+score);
+
     }
 
     public int getScore() {
