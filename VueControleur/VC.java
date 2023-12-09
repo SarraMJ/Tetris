@@ -26,13 +26,14 @@ public class VC extends JFrame implements Observer {
     Observer vueGrille;
     private Executor ex =  Executors.newSingleThreadExecutor();
 
-    JLabel scoreLabel = new JLabel("Score: 0");
+    JLabel scoreLabel = new JLabel("  Score: 0   ");
 
     public VC(GrilleSimple _modele) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         modele = _modele;
 
-        setSize(350, 500);
+        setSize(450, 500);
+
         // Panneau principal avec BorderLayout
         // Panneau principal avec BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -41,12 +42,15 @@ public class VC extends JFrame implements Observer {
         vueGrille = new VueGrilleV2(modele);
         JPanel grillePanel = (JPanel) vueGrille;
 
+        grillePanel.add(scoreLabel,BorderLayout.EAST);
+
         // Panneau pour le score et le bouton pause avec BoxLayout
         JPanel scorePausePanel = new JPanel();
+
         scorePausePanel.setLayout(new BoxLayout(scorePausePanel, BoxLayout.X_AXIS));
 
         // Ajout du score au panneau
-        scorePausePanel.add(scoreLabel);
+
         scorePausePanel.add(js);
         scorePausePanel.add(jq);
 
@@ -217,7 +221,7 @@ public class VC extends JFrame implements Observer {
                 vueGrille.update(o, arg);
 
                 jt.setText("Elapsed time : " + (System.currentTimeMillis() - lastTime) + "ms - x = " + modele.getPieceCourante().getx() + " y = " + modele.getPieceCourante().gety());
-                scoreLabel.setText("Score: " + modele.getScore());
+                scoreLabel.setText("  Score: " + modele.getScore()+"   ");
                 lastTime = System.currentTimeMillis();
 
             }

@@ -74,7 +74,22 @@ class VueGrilleV2 extends JPanel implements Observer {
                         }
                     }
 
+                }else {
+                    // If Piece p is null, display "Tetris" in the center with different colors for each letter
+                    String tetrisText = "Tetris";
+                    int x = (getWidth() - tetrisText.length() * 36) / 2;  // Adjust the font size multiplier as needed
+
+                    for (int i = 0; i < tetrisText.length(); i++) {
+                        char letter = tetrisText.charAt(i);
+                        Color letterColor = getLetterColor(letter);  // Function to get a different color for each letter
+                        g.setColor(letterColor);
+                        g.setFont(new Font("Arial", Font.BOLD, 36));  // You can adjust the font and size
+
+                        g.drawString(String.valueOf(letter), x, (getHeight() - g.getFontMetrics().getHeight()) / 2 + g.getFontMetrics().getAscent());
+                        x += 36;  // Adjust the spacing between letters as needed
+                    }
                 }
+
 
             }
         };
@@ -82,6 +97,25 @@ class VueGrilleV2 extends JPanel implements Observer {
         c.setPreferredSize(dim);
         add(c, BorderLayout.CENTER);
     }
+
+    private Color getLetterColor(char letter) {
+        // Provide a different color for each letter (you can customize this as needed)
+        switch (Character.toUpperCase(letter)) {
+            case 'T':
+                return Color.RED;
+            case 'E':
+                return Color.GREEN;
+            case 'R':
+                return Color.BLUE;
+            case 'I':
+                return Color.YELLOW;
+            case 'S':
+                return Color.ORANGE;
+            default:
+                return Color.WHITE;  // Default color for unknown letters
+        }
+    }
+
 
 
     @Override
