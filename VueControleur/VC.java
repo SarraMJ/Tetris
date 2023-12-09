@@ -18,6 +18,9 @@ public class VC extends JFrame implements Observer {
 
     JTextField jt = new JTextField("");
     JButton jb = new JButton("pause");
+
+    JButton js= new JButton("start");
+    JButton jq=new JButton("quit");
     GrilleSimple modele;
 
     Observer vueGrille;
@@ -44,6 +47,8 @@ public class VC extends JFrame implements Observer {
 
         // Ajout du score au panneau
         scorePausePanel.add(scoreLabel);
+        scorePausePanel.add(js);
+        scorePausePanel.add(jq);
 
         // Ajout d'un espace vertical entre le score et le bouton pause
         scorePausePanel.add(Box.createVerticalStrut(10));
