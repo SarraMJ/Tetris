@@ -5,7 +5,7 @@ import java.util.Random;
 public class Piece implements Runnable {
 
     private int x = 7;
-    private int y = -1;
+    private int y = -3;
 
     //coordonnees de la case la plus basse qui est true
     private int basX;

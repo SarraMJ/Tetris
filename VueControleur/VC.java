@@ -88,6 +88,7 @@ public class VC extends JFrame implements Observer {
         js.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                modele.setGameOver(false);
                 modele.startGame();
                 requestFocusInWindow();
             }
@@ -100,42 +101,7 @@ public class VC extends JFrame implements Observer {
                 System.exit(0);
             }
         });
-/*
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_SPACE:
-                        modele.action();
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        ex.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                modele.getPieceCourante().translation(Direction.DROITE);
-                            }
-                        });
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        ex.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                modele.getPieceCourante().translation(Direction.GAUCHE);
-                            }
-                        });
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        ex.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                modele.getPieceCourante().translation(Direction.BAS);
-                            }
-                        });
-                        break;
-                }
-            }
-        }); */
+
 
 
 

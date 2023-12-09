@@ -34,7 +34,7 @@ class VueGrilleV2 extends JPanel implements Observer {
 
             public void paint(Graphics g) {
                 Piece p=modele.getPieceCourante();
-                if (p!=null) {
+                if (p!=null && !modele.getGameOver()) {
 
                     for (int i = 0; i < modele.TAILLE; i++) {
                         for (int j = 0; j < modele.TAILLE; j++) {
@@ -74,7 +74,7 @@ class VueGrilleV2 extends JPanel implements Observer {
                         }
                     }
 
-                }else {
+                }else if(!modele.getGameOver()){
                     // If Piece p is null, display "Tetris" in the center with different colors for each letter
                     String tetrisText = "Tetris";
                     int x = (getWidth() - tetrisText.length() * 36) / 2;  // Adjust the font size multiplier as needed
@@ -88,6 +88,19 @@ class VueGrilleV2 extends JPanel implements Observer {
                         g.drawString(String.valueOf(letter), x, (getHeight() - g.getFontMetrics().getHeight()) / 2 + g.getFontMetrics().getAscent());
                         x += 36;  // Adjust the spacing between letters as needed
                     }
+                }else {
+                    g.setColor(Color.RED);
+                    g.setFont(new Font("Arial", Font.BOLD, 72));  // You can adjust the font and size
+                    String gameOverText = "Game Over";
+
+                    // Calculate the x-coordinate to center the text
+                    int x = (getWidth() - g.getFontMetrics().stringWidth(gameOverText)) / 2;
+
+                    // Calculate the y-coordinate to center the text vertically
+                    int y = (getHeight() - g.getFontMetrics().getHeight()) / 2 + g.getFontMetrics().getAscent();
+
+                    g.drawString(gameOverText, x, y);
+
                 }
 
 

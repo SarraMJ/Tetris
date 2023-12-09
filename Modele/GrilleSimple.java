@@ -15,6 +15,8 @@ public class GrilleSimple extends Observable implements Runnable {
 
     private boolean gameStarted = false;
 
+    private boolean gameOver = false;
+
     public GrilleSimple() { //constructeur
 
         new OrdonnanceurSimple(this).start(); // pour changer le temps de pause, garder la référence de l'ordonnanceur
@@ -54,7 +56,14 @@ public class GrilleSimple extends Observable implements Runnable {
                     // Vérifier si la case est déjà occupée par une autre pièce dans la grille
                     if (coordX >= 0 && coordX < TAILLE && coordY >= 0 && coordY < TAILLE) {
                         if (tabGrille[coordX][coordY] != Couleur.WHITE) {
+                            if (y==0) {
+                                // La pièce courante a atteint la ligne y = 0, arrêter d'avoir de nouvelles pièces
+                                gameStarted = false;
+                                gameOver=true;
+                            }
+
                             return true; // Collision détectée
+
                         }
                     }
                 }
@@ -83,10 +92,12 @@ public class GrilleSimple extends Observable implements Runnable {
     public void run() {
         if (gameStarted) { // Vérifier si le jeu a démarré
             pieceCourante.run();
+
             setChanged(); // setChanged() + notifyObservers() : notification de la vue pour le rafraichissement
             notifyObservers();
-            //on check et enleve les lignes remplies
+                //on check et enleve les lignes remplies
             checkAndRemoveLines();
+
         }
     }
 
@@ -170,5 +181,12 @@ public class GrilleSimple extends Observable implements Runnable {
 
     public boolean getGameStarted() {
         return gameStarted;
+    }
+
+    public boolean getGameOver() {
+        return gameOver;
+    }
+    public void setGameOver(boolean b){
+        gameOver=b;
     }
 }
