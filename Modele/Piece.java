@@ -224,7 +224,7 @@ public class Piece implements Runnable {
     }
 
     public void run() {  //on update les x,y,basX,basY
-        if(!paused && grille.getGameStarted()) {
+        if(!paused ) {
             int nextY = y;
             int nextX = x;
 

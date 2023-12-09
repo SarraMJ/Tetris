@@ -33,46 +33,48 @@ class VueGrilleV2 extends JPanel implements Observer {
 
 
             public void paint(Graphics g) {
+                Piece p=modele.getPieceCourante();
+                if (p!=null) {
+
+                    for (int i = 0; i < modele.TAILLE; i++) {
+                        for (int j = 0; j < modele.TAILLE; j++) {
+                            //if (!(i == modele.getPieceCourante().getx() && j == modele.getPieceCourante().gety()))
+                            Couleur[][] tabG;
+                            tabG = modele.getTabGrille();
+                            Couleur couleurCase = tabG[i][j];
+                            Color ColorCase = switchCouleurToColor(couleurCase);
+
+                            couleurCase = p.getCouleurfromCode(p.getCodeCouleur());
 
 
-                for (int i = 0; i < modele.TAILLE; i++) {
-                    for (int j = 0; j < modele.TAILLE; j++) {
-                        //if (!(i == modele.getPieceCourante().getx() && j == modele.getPieceCourante().gety()))
-                        Couleur[][] tabG;
-                        tabG= modele.getTabGrille();
-                        Couleur couleurCase = tabG[i][j];
-                        Color ColorCase=switchCouleurToColor(couleurCase) ;
-                        Piece p=modele.getPieceCourante();
-                        couleurCase=p.getCouleurfromCode(p.getCodeCouleur());
+                            g.setColor(ColorCase);
 
+                            g.fillRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE);
+                            g.setColor(Color.BLACK);
+                            g.drawRoundRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE, 1, 1);
 
-                        g.setColor(ColorCase);
-
-                        g.fillRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE);
-                        g.setColor(Color.BLACK);
-                        g.drawRoundRect(i * TAILLE, j * TAILLE, TAILLE, TAILLE, 1, 1);
+                        }
 
                     }
 
-                }
 
+                    Color ColorP = obtenirCouleur();
+                    g.setColor(ColorP);
 
-                Color ColorP = obtenirCouleur();
-                g.setColor(ColorP);
+                    int PieceX = modele.getPieceCourante().getx();
+                    int PieceY = modele.getPieceCourante().gety();
 
-                int PieceX=modele.getPieceCourante().getx();
-                int PieceY=modele.getPieceCourante().gety();
+                    for (int i = 0; i < 4; i++) {
+                        for (int j = 0; j < 4; j++) {
+                            if (modele.getPieceCourante().getTabPiece(i, j)) {
 
-                for(int i=0;i<4;i++){
-                    for(int j=0;j<4;j++){
-                        if (modele.getPieceCourante().getTabPiece(i,j)){
-
-                            g.setColor(ColorP);
-                            g.fillRect((PieceX * TAILLE)+(TAILLE*i), (PieceY * TAILLE)+(TAILLE*j), TAILLE, TAILLE);
+                                g.setColor(ColorP);
+                                g.fillRect((PieceX * TAILLE) + (TAILLE * i), (PieceY * TAILLE) + (TAILLE * j), TAILLE, TAILLE);
+                            }
                         }
                     }
-                }
 
+                }
 
             }
         };

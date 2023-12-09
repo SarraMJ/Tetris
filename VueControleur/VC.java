@@ -43,7 +43,7 @@ public class VC extends JFrame implements Observer {
 
         // Panneau pour le score et le bouton pause avec BoxLayout
         JPanel scorePausePanel = new JPanel();
-        scorePausePanel.setLayout(new BoxLayout(scorePausePanel, BoxLayout.Y_AXIS));
+        scorePausePanel.setLayout(new BoxLayout(scorePausePanel, BoxLayout.X_AXIS));
 
         // Ajout du score au panneau
         scorePausePanel.add(scoreLabel);

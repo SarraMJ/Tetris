@@ -7,7 +7,7 @@ public class GrilleSimple extends Observable implements Runnable {
 
     public final int TAILLE = 20;
 
-    private Piece pieceCourante = null;
+    private Piece pieceCourante=null;
 
     private Couleur[][] tabGrille;
 
