@@ -24,6 +24,8 @@ public class VC extends JFrame implements Observer {
     GrilleSimple modele;
 
     Observer vueGrille;
+
+    VueProchainesPieces vueProchainesPieces;
     private Executor ex =  Executors.newSingleThreadExecutor();
 
     JLabel scoreLabel = new JLabel("  Score: 0   ");
@@ -32,7 +34,7 @@ public class VC extends JFrame implements Observer {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         modele = _modele;
 
-        setSize(450, 500);
+        setSize(650, 500);
 
         // Panneau principal avec BorderLayout
         // Panneau principal avec BorderLayout
@@ -40,9 +42,12 @@ public class VC extends JFrame implements Observer {
         mainPanel.add(jt, BorderLayout.NORTH);
         // Panneau pour la grille
         vueGrille = new VueGrilleV2(modele);
+        vueProchainesPieces = new VueProchainesPieces(modele);
         JPanel grillePanel = (JPanel) vueGrille;
+        JPanel ProchainesPiecesPanel=(JPanel) vueProchainesPieces;
 
-        grillePanel.add(scoreLabel,BorderLayout.EAST);
+
+        //grillePanel.add(scoreLabel,BorderLayout.EAST);
 
         // Panneau pour le score et le bouton pause avec BoxLayout
         JPanel scorePausePanel = new JPanel();
@@ -61,7 +66,12 @@ public class VC extends JFrame implements Observer {
         scorePausePanel.add(jb);
 
         // Ajout de la grille au centre
-        mainPanel.add(grillePanel, BorderLayout.CENTER);
+        mainPanel.add(grillePanel, BorderLayout.WEST);
+
+        // Ajout du label de score à droite de la grille
+        mainPanel.add(scoreLabel, BorderLayout.EAST);
+
+        mainPanel.add(ProchainesPiecesPanel, BorderLayout.CENTER);
 
         // Ajout du panneau scorePause au sud
         mainPanel.add(scorePausePanel, BorderLayout.SOUTH);
@@ -148,7 +158,14 @@ public class VC extends JFrame implements Observer {
                 super.keyPressed(e);
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_DOWN:
-                        modele.getPieceCourante().translation(Direction.BAS);
+                        int x=modele.getPieceCourante().getx();
+                        int y=modele.getPieceCourante().gety();
+                        int suivant_y=modele.getPieceCourante().gety()+1;
+                        boolean[][] tabP=modele.getPieceCourante().getTabPiece();
+                        if(!modele.validationCollision_2(x,y,tabP) && !modele.validationCollision_2(x,suivant_y,tabP)) {
+                            modele.getPieceCourante().translation(Direction.BAS);
+
+                        }
                         break;
                 }
             }

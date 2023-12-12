@@ -5,7 +5,7 @@ import java.util.Random;
 public class Piece implements Runnable {
 
     private int x = 7;
-    private int y = -3;
+    private int y = -2;
 
     //coordonnees de la case la plus basse qui est true
     private int basX;
@@ -319,6 +319,10 @@ public class Piece implements Runnable {
         return tabPiece[i][j];
     }
 
+    public boolean[][] getTabPiece() {
+        return tabPiece;
+    }
+
     public void rotation(Orientation nouvelleOrientation) {
         boolean[][] nouveauTabPiece = new boolean[4][4];
 
@@ -391,6 +395,7 @@ public class Piece implements Runnable {
                     // Collision! arrêter la pièce
                     // mettre à jour la pièce courante
                     // Générer une nouvelle pièce
+                    dY=0;
                     Piece p = grille.getProchainePiece();
                     Piece nouvellePiece = new Piece(grille);
                     grille.getProchainesPieces().offer(nouvellePiece);

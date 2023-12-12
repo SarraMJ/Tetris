@@ -18,6 +18,9 @@ class VueGrilleV2 extends JPanel implements Observer {
     private GrilleSimple modele;
     Canvas c;
 
+
+    VueProchainesPieces vueProchainesPieces;
+
     public VueGrilleV2(GrilleSimple _modele) {
 
         modele = _modele;
@@ -90,7 +93,7 @@ class VueGrilleV2 extends JPanel implements Observer {
                     }
                 }else {
                     g.setColor(Color.RED);
-                    g.setFont(new Font("Arial", Font.BOLD, 72));  // You can adjust the font and size
+                    g.setFont(new Font("Arial", Font.BOLD, 50));  // You can adjust the font and size
                     String gameOverText = "Game Over";
 
                     // Calculate the x-coordinate to center the text
@@ -109,6 +112,8 @@ class VueGrilleV2 extends JPanel implements Observer {
 
         c.setPreferredSize(dim);
         add(c, BorderLayout.CENTER);
+        //vueProchainesPieces = new VueProchainesPieces(modele);
+       // add(vueProchainesPieces, BorderLayout.EAST);
     }
 
     private Color getLetterColor(char letter) {
@@ -172,7 +177,7 @@ class VueGrilleV2 extends JPanel implements Observer {
         else return Color.BLACK;
     }
 
-    public Color switchCouleurToColor(Couleur couleur) {
+    public static Color switchCouleurToColor(Couleur couleur) {
         switch (couleur) {
             case CYAN:
                 return Color.CYAN;
