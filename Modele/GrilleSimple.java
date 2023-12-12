@@ -1,7 +1,8 @@
 package Modele;
 
 import java.util.Observable;
-
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class GrilleSimple extends Observable implements Runnable {
 
@@ -17,6 +18,8 @@ public class GrilleSimple extends Observable implements Runnable {
 
     private boolean gameOver = false;
 
+    private Queue<Piece> prochainesPieces;
+
     public GrilleSimple() { //constructeur
 
         new OrdonnanceurSimple(this).start(); // pour changer le temps de pause, garder la référence de l'ordonnanceur
@@ -26,13 +29,34 @@ public class GrilleSimple extends Observable implements Runnable {
                 tabGrille[i][j]=Couleur.WHITE;
             }
         }
+        prochainesPieces = new LinkedList<>();
+        // Générez les premières pièces dans la liste des prochaines pièces
+        genererProchainesPieces(3);
+    }
+
+    private void genererProchainesPieces(int n) {
+        for (int i = 0; i < n; i++) {
+            prochainesPieces.add(new Piece(this));
+        }
     }
 
     public void startGame() {
         if (!gameStarted) {
             gameStarted = true;
-            pieceCourante=new Piece(this); // Créer la première pièce lorsque le jeu démarre
+            pieceCourante=getProchainePiece();
+            // Ajoutez une nouvelle pièce à la fin de la file d'attente
+            Piece nouvellePiece = new Piece(this); // Remplacez ceci par la logique de génération de votre nouvelle pièce
+            prochainesPieces.offer(nouvellePiece);
+
         }
+    }
+
+    public Piece getProchainePiece() {
+        return prochainesPieces.poll();
+    }
+
+    public Queue<Piece> getProchainesPieces() {
+        return prochainesPieces;
     }
 
     public void action() {  //applique la fonction action sur la pièce

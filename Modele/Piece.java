@@ -197,7 +197,9 @@ public class Piece implements Runnable {
                 if (grille.validationCollision(x, y, tabPiece)) {
                     // Collision détectée, arrêter la pièce ou effectuer d'autres actions nécessaires
                     // Générer une nouvelle pièce
-                    Piece p = new Piece(grille);
+                    Piece p = grille.getProchainePiece();
+                    Piece nouvellePiece = new Piece(grille);
+                    grille.getProchainesPieces().offer(nouvellePiece);
                     grille.setPieceCourante(p);
                 } else {
                     // Aucune collision avec d'autres pièces, effectuer la rotation
@@ -257,9 +259,11 @@ public class Piece implements Runnable {
                         grille.setTabGrille(w, z, tabPiece[i][j]);
                     }
                 }
-
-                Piece p = new Piece(grille);
+                Piece p = grille.getProchainePiece();
+                Piece nouvellePiece = new Piece(grille);
+                grille.getProchainesPieces().offer(nouvellePiece);
                 grille.setPieceCourante(p);
+
             }
         }
 
@@ -387,7 +391,9 @@ public class Piece implements Runnable {
                     // Collision! arrêter la pièce
                     // mettre à jour la pièce courante
                     // Générer une nouvelle pièce
-                    Piece p = new Piece(grille);
+                    Piece p = grille.getProchainePiece();
+                    Piece nouvellePiece = new Piece(grille);
+                    grille.getProchainesPieces().offer(nouvellePiece);
                     grille.setPieceCourante(p);
                 } else {
                     y = nextY;
