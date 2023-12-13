@@ -10,6 +10,11 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.net.URL;
+import java.io.File;
 
 
 
@@ -23,6 +28,9 @@ public class VC extends JFrame implements Observer {
     JButton jq=new JButton("quit");
     GrilleSimple modele;
 
+    boolean gameO=true;
+
+
     Observer vueGrille;
 
     VueProchainesPieces vueProchainesPieces;
@@ -30,11 +38,15 @@ public class VC extends JFrame implements Observer {
 
     JLabel scoreLabel = new JLabel("  Score: 0   ");
 
+    private final Clip Soundjeu;
+    private final Clip soundGameOver;
     public VC(GrilleSimple _modele) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         modele = _modele;
 
         setSize(650, 500);
+        Soundjeu = loadSound("./ressources/music_tetris.wav");
+        soundGameOver = loadSound("./ressources/game_over_music.wav");
 
         // Panneau principal avec BorderLayout
         // Panneau principal avec BorderLayout
@@ -83,11 +95,12 @@ public class VC extends JFrame implements Observer {
         jb.addActionListener(new ActionListener() { //évènement bouton : object contrôleur qui réceptionne
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(" Bouton DOOOOOO ");
                 ex.execute(new Runnable() {
                     @Override
                     public void run() {
                         modele.getPieceCourante().togglePause();
+                        boolean paused=modele.getPieceCourante().getPaused();
+                        toggleSoundPause(paused);
 
                     }
                 });
@@ -95,11 +108,30 @@ public class VC extends JFrame implements Observer {
             }
         });
 
+        js.addActionListener(new ActionListener() { //quand on rappuie sur start quand on est à gameover
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Si le jeu est terminé, réinitialiser le jeu
+                System.out.println(modele.getGameOver());
+                if (modele.getGameOver()) {
+                    modele.resetGame();
+                    modele.setGameOver(false);
+                    modele.startGame();
+                    startGameSound(modele.getGameOver());
+                    gameO = true; // Réinitialiser le drapeau gameO
+                }
+                setFocusable(true);
+                requestFocusInWindow();
+            }
+        });
+
+
         js.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                modele.setGameOver(false);
+                //modele.setGameOver(false);
                 modele.startGame();
+                startGameSound(modele.getGameOver());
                 requestFocusInWindow();
             }
         });
@@ -108,6 +140,7 @@ public class VC extends JFrame implements Observer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Add logic to quit the game
+                stopSounds();
                 System.exit(0);
             }
         });
@@ -119,9 +152,9 @@ public class VC extends JFrame implements Observer {
             @Override
             public void keyPressed(KeyEvent e) { //évènement clavier : object contrôleur qui réceptionne
                 super.keyPressed(e);
-                System.out.print(" Bouton2 ");
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_SPACE: modele.action();
+                    //System.out.println(modele.getPieceCourante().getOrientation());
 
                 }
             }
@@ -131,10 +164,14 @@ public class VC extends JFrame implements Observer {
             @Override
             public void keyPressed(KeyEvent e) { //translation a droite
                 super.keyPressed(e);
-                System.out.print(" VK_RIGHT ");
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_RIGHT:
-                        modele.getPieceCourante().translation(Direction.DROITE);
+                        int x=modele.getPieceCourante().getx();
+                        int y=modele.getPieceCourante().gety();
+                        boolean[][] tabP=modele.getPieceCourante().getTabPiece();
+                        if (!modele.validationCollisionCoteDroit(x,y,tabP)) {
+                            modele.getPieceCourante().translation(Direction.DROITE);
+                         }
                         break;
                 }
             }
@@ -146,7 +183,12 @@ public class VC extends JFrame implements Observer {
                 super.keyPressed(e);
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_LEFT:
-                        modele.getPieceCourante().translation(Direction.GAUCHE);
+                        int x=modele.getPieceCourante().getx();
+                        int y=modele.getPieceCourante().gety();
+                        boolean[][] tabP=modele.getPieceCourante().getTabPiece();
+                        if (!modele.validationCollisionCoteGauche(x,y,tabP)) {
+                            modele.getPieceCourante().translation(Direction.GAUCHE);
+                        }
                         break;
                 }
             }
@@ -178,6 +220,8 @@ public class VC extends JFrame implements Observer {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_P:
                         modele.getPieceCourante().togglePause();
+                        boolean paused=modele.getPieceCourante().getPaused();
+                        toggleSoundPause(paused);
                         break;
                 }
             }
@@ -207,6 +251,14 @@ public class VC extends JFrame implements Observer {
                 scoreLabel.setText("  Score: " + modele.getScore()+"   ");
                 lastTime = System.currentTimeMillis();
 
+                //gameover sound
+                boolean gameover= modele.getGameOver();
+
+                if(gameover && gameO){
+                    startGameSound(gameover);
+                    gameO=false;
+                }
+
             }
         });
 
@@ -225,6 +277,9 @@ public class VC extends JFrame implements Observer {
                                            VC vc = new VC(m);
                                            vc.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                                            m.addObserver(vc);
+                                           // Arrêter la musique au début du jeu
+                                           vc.stopSounds();
+
                                            vc.setVisible(true);
 
                                        }
@@ -232,10 +287,62 @@ public class VC extends JFrame implements Observer {
         );
     }
 
+    private Clip loadSound(String fileName) {
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            URL url = classLoader.getResource(fileName);
 
+            if (url == null) {
+                throw new IllegalArgumentException("Le fichier son " + fileName + " n'a pas pu être chargé. URL nulle.");
+            }
 
+            System.out.println("Chargement du fichier son depuis l'URL : " + url);
 
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            return clip;
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement du fichier son : " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
 
+    private void stopSounds() {
+        if (Soundjeu != null && Soundjeu.isRunning()) {
+            Soundjeu.stop();
+            Soundjeu.setFramePosition(0);
+        }
+        if (soundGameOver != null && soundGameOver.isRunning()) {
+            soundGameOver.stop();
+            soundGameOver.setFramePosition(0);
+        }
+    }
+    private void startGameSound(boolean gameOver) {
+        stopSounds(); // Arrêter les sons en cours
+        if (!gameOver && Soundjeu != null) {
+            Soundjeu.loop(Clip.LOOP_CONTINUOUSLY);
+        } else if (soundGameOver != null) {
+            soundGameOver.start();
+        }
+    }
+    private void playGameOverSound() {
+        if (soundGameOver != null) {
+            System.out.println("Game over, playing new sound");
+            soundGameOver.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+    }
+
+    private void toggleSoundPause(boolean paused) {
+        if (paused) {
+            Soundjeu.stop();
+            Soundjeu.setFramePosition(0);  // Réinitialiser la position du son principal
+        } else {
+            Soundjeu.start();
+        }
+
+    }
 
 
 }

@@ -21,9 +21,6 @@ public class Piece implements Runnable {
     private int codeCouleur = 5;
     private GrilleSimple grille;
 
-    private Orientation orientation = Orientation.ORIGINALE;
-
-
 
     public void randPiece(int rand){
         /*Random random = new Random();
@@ -166,44 +163,22 @@ public class Piece implements Runnable {
         }
     }
 
-    public void nextOrientation(){
-
-
-        switch (orientation) {
-            case ORIGINALE:
-                orientation=Orientation.DROITE;
-                break;
-            case DROITE:
-                orientation=Orientation.ENBAS;
-                break;
-            case ENBAS:
-                orientation=Orientation.GAUCHE;
-                break;
-            case GAUCHE:
-                orientation=Orientation.ORIGINALE;
-                break;
-
-        }
-
-    }
-
     public void action() {
         if(!paused) {
-            nextOrientation();
-            //System.out.print(" " + orientation + " ");
+
             // Vérifier la collision avec la grille
             if (grille.validationTab(x, y, tabPiece)) {
                 // Vérifier la collision avec d'autres pièces
                 if (grille.validationCollision(x, y, tabPiece)) {
-                    // Collision détectée, arrêter la pièce ou effectuer d'autres actions nécessaires
-                    // Générer une nouvelle pièce
+                    // Collision détectée, on arrête la pièce et d'autres actions nécessaires
+                    // Générer une nouvelle pièce pour la mettre à la fin de la queue
                     Piece p = grille.getProchainePiece();
                     Piece nouvellePiece = new Piece(grille);
                     grille.getProchainesPieces().offer(nouvellePiece);
                     grille.setPieceCourante(p);
                 } else {
-                    // Aucune collision avec d'autres pièces, effectuer la rotation
-                    rotation(orientation);
+                    // Aucune collision avec d'autres pièces, on fait la rotation
+                    rotation();
                 }
             }
         }
@@ -309,11 +284,6 @@ public class Piece implements Runnable {
     }
 
 
-    public Orientation getOrientation() {
-        return orientation;
-    }
-
-
 
     public boolean getTabPiece(int i,int j){
         return tabPiece[i][j];
@@ -323,51 +293,26 @@ public class Piece implements Runnable {
         return tabPiece;
     }
 
-    public void rotation(Orientation nouvelleOrientation) {
+    public void rotation() {
         boolean[][] nouveauTabPiece = new boolean[4][4];
 
-        // Effectue la rotation en fonction de la nouvelle orientation
-        switch (nouvelleOrientation) {
-            case ORIGINALE:
-                // Aucune rotation, c'est le tableau d'origine
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 4; j++) {
-                        nouveauTabPiece[i][j] = tabPiece[i][j];
-                    }
-                }
-                break;
-            case DROITE:
-                // Fais la rotation à droite
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 4; j++) {
-                        nouveauTabPiece[i][j] = tabPiece[3-j][i];
-                    }
-                }
-                break;
-            case ENBAS:
-                // Fais la rotation vers le bas
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 4; j++) {
-                        nouveauTabPiece[i][j] = tabPiece[3-i][3-j];
-                    }
-                }
-                break;
-            case GAUCHE:
-                // Fais la rotation à gauche
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 4; j++) {
-                        nouveauTabPiece[i][j] = tabPiece[j][3-i];
-                    }
-                }
-                break;
+
+
+        // Fais la rotation à droite
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                nouveauTabPiece[i][j] = tabPiece[3-j][i];
+            }
         }
 
-            if(grille.validationTab(x,y,nouveauTabPiece)) {
-                tabPiece = nouveauTabPiece;
-                orientation = nouvelleOrientation;
-                plusbasY();
-            }
+
+        if(grille.validationTab(x,y,nouveauTabPiece) && !grille.validationCollision(x, y, nouveauTabPiece)) {
+            tabPiece = nouveauTabPiece;
+            plusbasY();
+        }
     }
+
+
 
     public void translation(Direction direction) {
         if (!paused) {
@@ -408,6 +353,7 @@ public class Piece implements Runnable {
             }
         }
     }
+
 
 
 }

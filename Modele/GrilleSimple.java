@@ -117,6 +117,45 @@ public class GrilleSimple extends Observable implements Runnable {
         return false; // Aucune collision détectée
     }
 
+    public boolean validationCollisionCoteDroit(int x, int y, boolean[][] tabPiece) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (tabPiece[i][j]) {
+                    int coordX = x + i + 1; // Vérifiez le côté droit, donc ajoutez 1 à la coordonnée x
+                    int coordY = y + j;
+
+                    // Vérifier si la case est déjà occupée par une autre pièce dans la grille
+                    if (coordX >= 0 && coordX < TAILLE && coordY >= 0 && coordY < TAILLE) {
+                        if (tabGrille[coordX][coordY] != Couleur.WHITE) {
+                            return true; // Collision détectée
+                        }
+                    }
+                }
+            }
+        }
+        return false; // Aucune collision détectée
+    }
+
+    public boolean validationCollisionCoteGauche(int x, int y, boolean[][] tabPiece) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (tabPiece[i][j]) {
+                    int coordX = x + i - 1; // Vérifiez le côté gauche, donc soustrayez 1 à la coordonnée x
+                    int coordY = y + j;
+
+                    // Vérifier si la case est déjà occupée par une autre pièce dans la grille
+                    if (coordX >= 0 && coordX < TAILLE && coordY >= 0 && coordY < TAILLE) {
+                        if (tabGrille[coordX][coordY] != Couleur.WHITE) {
+                            return true; // Collision détectée
+                        }
+                    }
+                }
+            }
+        }
+        return false; // Aucune collision détectée
+    }
+
+
 
     public boolean validationTab(int x,int y,boolean[][] tab) {
         for (int i = 0; i < 4; i++) {
@@ -133,6 +172,8 @@ public class GrilleSimple extends Observable implements Runnable {
         }
         return true;
     }
+
+
 
     public void run() {
         if (gameStarted) { // Vérifier si le jeu a démarré
@@ -234,4 +275,18 @@ public class GrilleSimple extends Observable implements Runnable {
     public void setGameOver(boolean b){
         gameOver=b;
     }
+
+    public void resetGame() {
+        tabGrille = new Couleur[21][21];
+        for (int i = 0; i < 21; i++) {
+            for (int j = 0; j < 21; j++) {
+                tabGrille[i][j] = Couleur.WHITE;
+            }
+        }
+        score = 0;
+        gameStarted = false;
+        gameOver = false;
+        genererProchainesPieces(3); // Générez les premières pièces dans la liste des prochaines pièces
+    }
+
 }
