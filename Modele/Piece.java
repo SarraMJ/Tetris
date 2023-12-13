@@ -10,7 +10,7 @@ public class Piece implements Runnable {
     //coordonnees de la case la plus basse qui est true
     private int basX;
     private int basY;
-    private int dY = 1;
+    private int dY = 1; //quand à 1 la piece descend, si à 0 la piece se fige
 
     private boolean[][] tabPiece;
 
@@ -22,13 +22,8 @@ public class Piece implements Runnable {
     private GrilleSimple grille;
 
 
-    public void randPiece(int rand){
-        /*Random random = new Random();
-        for (int i=0;i<4;i++){
-            for (int j=0;j<4;j++){
-                tabPiece[i][j]= random.nextBoolean();
-            }
-        } */
+    public void randPiece(int rand){ //donne la forme de la piece selon un int en parametre
+
         if (rand==1){ // forme I-Tetrimino ou baton
             codeCouleur=1;
             int i=0;
@@ -142,7 +137,7 @@ public class Piece implements Runnable {
         tabPiece= new boolean[4][4];
         Random random = new Random();
         int rand = random.nextInt(7) + 1;
-        randPiece(rand);
+        randPiece(2);
         plusbasY();
 
     }
@@ -150,28 +145,20 @@ public class Piece implements Runnable {
 
     public void togglePause() {
         paused = !paused;
-    }
+    } //change l'etat du jeu :pause et play
 
 
-    // Méthode d'exemple pour afficher le tableau
-    public void afficherTableau() {
-        for (int i = 0; i < tabPiece.length; i++) {
-            for (int j = 0; j < tabPiece[i].length; j++) {
-               // System.out.print(tabPiece[i][j] + " ");
-            }
-            //System.out.println();
-        }
-    }
 
-    public void action() {
+
+    public void action() { //appelle la rotation de la piece si les conditions de collisions sont verifiees
         if(!paused) {
 
-            // Vérifier la collision avec la grille
+            // Vérifie si dans la grille
             if (grille.validationTab(x, y, tabPiece)) {
-                // Vérifier la collision avec d'autres pièces
+                // Vérifie la collision avec d'autres pièces
                 if (grille.validationCollision(x, y, tabPiece)) {
-                    // Collision détectée, on arrête la pièce et d'autres actions nécessaires
-                    // Générer une nouvelle pièce pour la mettre à la fin de la queue
+                    // Collision=rotation, on arrête la pièce et d'autres actions nécessaires
+                    // Génère une nouvelle pièce pour la mettre à la fin de la queue
                     Piece p = grille.getProchainePiece();
                     Piece nouvellePiece = new Piece(grille);
                     grille.getProchainesPieces().offer(nouvellePiece);
@@ -213,14 +200,14 @@ public class Piece implements Runnable {
 
             //pour le moment on rajoute pas de x pour la bouger
             //apres on rajoutera dX
-
+            //quand il n'y a pas de collisions, on fait descendre la piece
             if (grille.validationPosition(nextBasX, nextBasY) && !grille.validationCollision(nextX, nextY, tabPiece)) {
                 y = nextY;
                 x = nextX;
                 basY = nextBasY;
                 basX = nextBasX;
-                //System.out.println("pos" + x + " "+ y);
-            } else {
+
+            } else { //quand il y a collision
                 dY *= 0;
 
                 //on stocke les cases true dans le tableau de la grille
@@ -229,9 +216,9 @@ public class Piece implements Runnable {
                 for (int i = 0; i < 4; i++) {
                     for (int j = 0; j < 4; j++) {
                         //System.out.println(" LE Y "+y);
-                        w = x + i;
+                        w = x + i; //positions absolues des cases du tableau
                         z = y + j;
-                        grille.setTabGrille(w, z, tabPiece[i][j]);
+                        grille.setTabGrille(w, z, tabPiece[i][j]); //on stocke la couleur de la piece dans la grille
                     }
                 }
                 Piece p = grille.getProchainePiece();
@@ -305,7 +292,7 @@ public class Piece implements Runnable {
             }
         }
 
-
+//si pas de collision on effectue la rotation
         if(grille.validationTab(x,y,nouveauTabPiece) && !grille.validationCollision(x, y, nouveauTabPiece)) {
             tabPiece = nouveauTabPiece;
             plusbasY();
@@ -336,7 +323,7 @@ public class Piece implements Runnable {
 
 
             if (grille.validationTab(nextX, nextY, tabPiece)) {
-                if (grille.validationCollision(nextX, nextY, tabPiece)) {
+                if (grille.validationCollision(nextX, nextY, tabPiece)) { //s'il y a collision
                     // Collision! arrêter la pièce
                     // mettre à jour la pièce courante
                     // Générer une nouvelle pièce

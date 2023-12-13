@@ -50,7 +50,7 @@ public class VueProchainesPieces extends JPanel implements Observer {
     private void drawPiece(Graphics g, Piece piece, int startX, int startY, Color couleur) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (piece.getTabPiece(i, j)) {
+                if (piece.getTabPiece(i, j)) { //si la case de la piece est true on colorie la case
                     g.setColor(couleur);
                     g.fillRect(startX + i * TAILLE, startY + j * TAILLE, TAILLE, TAILLE);
                     g.setColor(Color.BLACK);

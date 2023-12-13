@@ -41,7 +41,7 @@ class VueGrilleV2 extends JPanel implements Observer {
 
                     for (int i = 0; i < modele.TAILLE; i++) {
                         for (int j = 0; j < modele.TAILLE; j++) {
-                            //if (!(i == modele.getPieceCourante().getx() && j == modele.getPieceCourante().gety()))
+
                             Couleur[][] tabG;
                             tabG = modele.getTabGrille();
                             Couleur couleurCase = tabG[i][j];
@@ -67,7 +67,7 @@ class VueGrilleV2 extends JPanel implements Observer {
                     int PieceX = modele.getPieceCourante().getx();
                     int PieceY = modele.getPieceCourante().gety();
 
-                    for (int i = 0; i < 4; i++) {
+                    for (int i = 0; i < 4; i++) { //on dessine la piece
                         for (int j = 0; j < 4; j++) {
                             if (modele.getPieceCourante().getTabPiece(i, j)) {
 
@@ -78,9 +78,9 @@ class VueGrilleV2 extends JPanel implements Observer {
                     }
 
                 }else if(!modele.getGameOver()){
-                    // If Piece p is null, display "Tetris" in the center with different colors for each letter
+                    //si p est null et que je jeu n'est pas à gameover, on affiche tetris coloriée au milieu de la grille
                     String tetrisText = "Tetris";
-                    int x = (getWidth() - tetrisText.length() * 36) / 2;  // Adjust the font size multiplier as needed
+                    int x = (getWidth() - tetrisText.length() * 36) / 2;
 
                     for (int i = 0; i < tetrisText.length(); i++) {
                         char letter = tetrisText.charAt(i);
@@ -91,7 +91,7 @@ class VueGrilleV2 extends JPanel implements Observer {
                         g.drawString(String.valueOf(letter), x, (getHeight() - g.getFontMetrics().getHeight()) / 2 + g.getFontMetrics().getAscent());
                         x += 36;  // Adjust the spacing between letters as needed
                     }
-                }else {
+                }else { //gameover
                     g.setColor(Color.RED);
                     g.setFont(new Font("Arial", Font.BOLD, 50));  // You can adjust the font and size
                     String gameOverText = "Game Over";
@@ -112,12 +112,11 @@ class VueGrilleV2 extends JPanel implements Observer {
 
         c.setPreferredSize(dim);
         add(c, BorderLayout.CENTER);
-        //vueProchainesPieces = new VueProchainesPieces(modele);
-       // add(vueProchainesPieces, BorderLayout.EAST);
+
     }
 
     private Color getLetterColor(char letter) {
-        // Provide a different color for each letter (you can customize this as needed)
+        //donne la couleur de chaque lettre du mot tetris
         switch (Character.toUpperCase(letter)) {
             case 'T':
                 return Color.RED;

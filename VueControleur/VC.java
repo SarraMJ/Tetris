@@ -62,20 +62,20 @@ public class VC extends JFrame implements Observer {
         //grillePanel.add(scoreLabel,BorderLayout.EAST);
 
         // Panneau pour le score et le bouton pause avec BoxLayout
-        JPanel scorePausePanel = new JPanel();
+        JPanel boutonsPanel = new JPanel();
 
-        scorePausePanel.setLayout(new BoxLayout(scorePausePanel, BoxLayout.X_AXIS));
+        boutonsPanel.setLayout(new BoxLayout(boutonsPanel, BoxLayout.X_AXIS));
 
         // Ajout du score au panneau
 
-        scorePausePanel.add(js);
-        scorePausePanel.add(jq);
+        boutonsPanel.add(js);
+        boutonsPanel.add(jq);
 
         // Ajout d'un espace vertical entre le score et le bouton pause
-        scorePausePanel.add(Box.createVerticalStrut(10));
+        boutonsPanel.add(Box.createVerticalStrut(10));
 
         // Ajout du bouton pause au panneau
-        scorePausePanel.add(jb);
+        boutonsPanel.add(jb);
 
         // Ajout de la grille au centre
         mainPanel.add(grillePanel, BorderLayout.WEST);
@@ -86,22 +86,23 @@ public class VC extends JFrame implements Observer {
         mainPanel.add(ProchainesPiecesPanel, BorderLayout.CENTER);
 
         // Ajout du panneau scorePause au sud
-        mainPanel.add(scorePausePanel, BorderLayout.SOUTH);
+        mainPanel.add(boutonsPanel, BorderLayout.SOUTH);
 
         // Ajout du panneau principal
         setContentPane(mainPanel);
 
 
-        jb.addActionListener(new ActionListener() { //évènement bouton : object contrôleur qui réceptionne
+        jb.addActionListener(new ActionListener() { //quand j'appuie sur pause
             @Override
             public void actionPerformed(ActionEvent e) {
                 ex.execute(new Runnable() {
                     @Override
                     public void run() {
-                        modele.getPieceCourante().togglePause();
-                        boolean paused=modele.getPieceCourante().getPaused();
-                        toggleSoundPause(paused);
-
+                        if(!modele.getGameOver() && modele.getGameStarted()) { //si on a commencé la partie
+                            modele.getPieceCourante().togglePause();
+                            boolean paused = modele.getPieceCourante().getPaused();
+                            toggleSoundPause(paused);
+                        }
                     }
                 });
                 requestFocusInWindow();
@@ -115,8 +116,9 @@ public class VC extends JFrame implements Observer {
                 System.out.println(modele.getGameOver());
                 if (modele.getGameOver()) {
                     modele.resetGame();
-                    modele.setGameOver(false);
+                    //modele.setGameOver(false);
                     modele.startGame();
+                    stopSounds();
                     startGameSound(modele.getGameOver());
                     gameO = true; // Réinitialiser le drapeau gameO
                 }
@@ -126,12 +128,14 @@ public class VC extends JFrame implements Observer {
         });
 
 
-        js.addActionListener(new ActionListener() {
+        js.addActionListener(new ActionListener() { //quand on appuie sur start pour la premiere fois
             @Override
             public void actionPerformed(ActionEvent e) {
                 //modele.setGameOver(false);
-                modele.startGame();
-                startGameSound(modele.getGameOver());
+                if(!modele.getGameOver()&& !modele.getGameStarted()) {
+                    modele.startGame();
+                    startGameSound(modele.getGameOver());
+                }
                 requestFocusInWindow();
             }
         });
@@ -139,7 +143,7 @@ public class VC extends JFrame implements Observer {
         jq.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add logic to quit the game
+                // quitter le jeu
                 stopSounds();
                 System.exit(0);
             }
@@ -148,12 +152,12 @@ public class VC extends JFrame implements Observer {
 
 
 
-        addKeyListener(new KeyAdapter() {
+        addKeyListener(new KeyAdapter() { //bouton espace : rotation
             @Override
-            public void keyPressed(KeyEvent e) { //évènement clavier : object contrôleur qui réceptionne
+            public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_SPACE: modele.action();
+                    case KeyEvent.VK_SPACE: modele.action(); //fais la rotation
                     //System.out.println(modele.getPieceCourante().getOrientation());
 
                 }
@@ -199,7 +203,7 @@ public class VC extends JFrame implements Observer {
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_DOWN: //descends plus rapidement
                         int x=modele.getPieceCourante().getx();
                         int y=modele.getPieceCourante().gety();
                         int suivant_y=modele.getPieceCourante().gety()+1;
@@ -218,7 +222,7 @@ public class VC extends JFrame implements Observer {
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_P:
+                    case KeyEvent.VK_P: //quand j'appuie sur pause, je pause le jeu et le son
                         modele.getPieceCourante().togglePause();
                         boolean paused=modele.getPieceCourante().getPaused();
                         toggleSoundPause(paused);
@@ -255,6 +259,7 @@ public class VC extends JFrame implements Observer {
                 boolean gameover= modele.getGameOver();
 
                 if(gameover && gameO){
+                    stopSounds();
                     startGameSound(gameover);
                     gameO=false;
                 }
@@ -272,22 +277,21 @@ public class VC extends JFrame implements Observer {
 
         SwingUtilities.invokeLater(new Runnable() {
 
-                                       public void run() {
-                                           GrilleSimple m = new GrilleSimple();
-                                           VC vc = new VC(m);
-                                           vc.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                                           m.addObserver(vc);
-                                           // Arrêter la musique au début du jeu
-                                           vc.stopSounds();
+            public void run() {
+                GrilleSimple m = new GrilleSimple();
+                VC vc = new VC(m);
+                vc.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                m.addObserver(vc);
+                // Arrêter la musique au début du jeu
+                vc.stopSounds();
 
-                                           vc.setVisible(true);
+                vc.setVisible(true);
 
-                                       }
-                                   }
-        );
+            }
+        });
     }
 
-    private Clip loadSound(String fileName) {
+    private Clip loadSound(String fileName) { //telecharger fichiers sons
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             URL url = classLoader.getResource(fileName);

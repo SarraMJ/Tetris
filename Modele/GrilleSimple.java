@@ -6,7 +6,7 @@ import java.util.Queue;
 
 public class GrilleSimple extends Observable implements Runnable {
 
-    public final int TAILLE = 20;
+    public final int TAILLE = 20; //taille de la grille
 
     private Piece pieceCourante=null;
 
@@ -34,7 +34,7 @@ public class GrilleSimple extends Observable implements Runnable {
         genererProchainesPieces(3);
     }
 
-    private void genererProchainesPieces(int n) {
+    private void genererProchainesPieces(int n) { //genere 3 pieces a mettre dans notre queue
         for (int i = 0; i < n; i++) {
             prochainesPieces.add(new Piece(this));
         }
@@ -65,21 +65,21 @@ public class GrilleSimple extends Observable implements Runnable {
 
     }
 
-    //si dans la grille à la prochaine position
+    //si la piece est dans la grille et verifie seuleemnt par rapport a l'axe des ordonnees
     public boolean validationPosition(int _nextX, int _nextY) {
         return (_nextY>=0 && _nextY < TAILLE);
     }
 
-    public boolean validationCollision(int x, int y, boolean[][] tabPiece) {
+    public boolean validationCollision(int x, int y, boolean[][] tabPiece) { //verifie s'il y a collision
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (tabPiece[i][j]) {
+                if (tabPiece[i][j]) { //position absolu du tableau de la piece
                     int coordX = x + i;
                     int coordY = y + j;
 
                     // Vérifier si la case est déjà occupée par une autre pièce dans la grille
                     if (coordX >= 0 && coordX < TAILLE && coordY >= 0 && coordY < TAILLE) {
-                        if (tabGrille[coordX][coordY] != Couleur.WHITE) {
+                        if (tabGrille[coordX][coordY] != Couleur.WHITE) { //si le tableau de grille est vite a cette position
                             if (y<=0) {
                                 // La pièce courante a atteint la ligne y = 0, arrêter d'avoir de nouvelles pièces
                                 gameStarted = false;
@@ -96,7 +96,7 @@ public class GrilleSimple extends Observable implements Runnable {
         return false; // Aucune collision détectée
     }
 
-    public boolean validationCollision_2(int x, int y, boolean[][] tabPiece) {
+    public boolean validationCollision_2(int x, int y, boolean[][] tabPiece) { // sans le gameover
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 if (tabPiece[i][j]) {
@@ -156,7 +156,7 @@ public class GrilleSimple extends Observable implements Runnable {
     }
 
 
-
+    // par rapport aux x et aux y on verifie si la piece est dans la grille
     public boolean validationTab(int x,int y,boolean[][] tab) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -179,10 +179,10 @@ public class GrilleSimple extends Observable implements Runnable {
         if (gameStarted) { // Vérifier si le jeu a démarré
             pieceCourante.run();
 
-            setChanged(); // setChanged() + notifyObservers() : notification de la vue pour le rafraichissement
+            setChanged(); // notification de la vue pour le rafraichissement
             notifyObservers();
-                //on check et enleve les lignes remplies
-            checkAndRemoveLines();
+
+            verifie_et_supprime_lignes_remplies();//on check et enleve les lignes remplies
 
         }
     }
@@ -214,7 +214,7 @@ public class GrilleSimple extends Observable implements Runnable {
 
 
 
-    public void checkAndRemoveLines() {
+    public void verifie_et_supprime_lignes_remplies() { // pour verifier les lignes remplies et les supprimer
         int nbLignesremplies=0;
         for (int i = TAILLE - 1; i >= 0; i--) {
             boolean ligneRemplie = true;
@@ -227,7 +227,7 @@ public class GrilleSimple extends Observable implements Runnable {
 
             if (ligneRemplie) {
                 nbLignesremplies++;
-                removeLineAndShiftDown(i);
+                enleveligne_et_decale(i);
                 setChanged(); // Indiquer que la grille a été modifiée
                 notifyObservers(); // Notifier les observateurs pour le rafraîchissement
                 i++; // Révérifier la même ligne, car tout a été décalé vers le bas
@@ -247,7 +247,7 @@ public class GrilleSimple extends Observable implements Runnable {
         }
     }
 
-    public void removeLineAndShiftDown(int ligne) {
+    public void enleveligne_et_decale(int ligne) {
         for (int i = ligne; i > 0; i--) {
             for (int j = 0; j < TAILLE; j++) {
                 tabGrille[j][i] = tabGrille[j][i-1];
@@ -276,7 +276,7 @@ public class GrilleSimple extends Observable implements Runnable {
         gameOver=b;
     }
 
-    public void resetGame() {
+    public void resetGame() { //appele quand j'appuie sur start et que le jeu est en mode gamover
         tabGrille = new Couleur[21][21];
         for (int i = 0; i < 21; i++) {
             for (int j = 0; j < 21; j++) {
